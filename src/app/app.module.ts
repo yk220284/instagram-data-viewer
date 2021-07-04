@@ -7,16 +7,24 @@ import { PostDetailComponent } from './post-detail/post-detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { PostTableComponent } from './post-table/post-table.component'
+
+// Material Module
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
+import { MatListModule } from '@angular/material/list';
+import { MatIconModule } from '@angular/material/icon';
 
 // Firebace Module
 import { AngularFireModule } from '@angular/fire';
 import { AngularFirestoreModule } from '@angular/fire/firestore';
-import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireStorageModule, BUCKET } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { environment } from 'src/environments/environment';
+import { DropzoneDirective } from './dropzone.directive';
+import { UploaderComponent } from './uploader/uploader.component';
+import { UploadTaskComponent } from './upload-task/upload-task.component';
 
 
 @NgModule({
@@ -24,6 +32,9 @@ import { environment } from 'src/environments/environment';
     AppComponent,
     PostDetailComponent,
     PostTableComponent,
+    DropzoneDirective,
+    UploaderComponent,
+    UploadTaskComponent,
   ],
   imports: [
     BrowserModule,
@@ -31,15 +42,19 @@ import { environment } from 'src/environments/environment';
     BrowserAnimationsModule,
     // Firebase Module
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFirestoreModule, // firestore
     AngularFireAuthModule, // auth
     AngularFireStorageModule, // storage
     // Material Module
     MatTableModule,
     MatCardModule,
-    MatButtonModule
+    MatButtonModule,
+    MatProgressBarModule,
+    MatListModule,
+    MatIconModule
   ],
-  providers: [],
+  providers: [
+    { provide: BUCKET, useValue: 'instagram-data-label-tool' }
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

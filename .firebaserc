@@ -1,0 +1,11 @@
+{
+  "targets": {
+    "instagram-data-label-tool": {
+      "hosting": {
+        "instagram-data-viewer": [
+          "instagram-data-label-tool"
+        ]
+      }
+    }
+  }
+}
