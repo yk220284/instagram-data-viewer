@@ -10,6 +10,13 @@ import { PostTableComponent } from './post-table/post-table.component'
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 
+// Firebace Module
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
+import { AngularFireStorageModule } from '@angular/fire/storage';
+import { AngularFireAuthModule } from '@angular/fire/auth';
+
+import { environment } from 'src/environments/environment';
 
 
 @NgModule({
@@ -22,6 +29,12 @@ import { MatButtonModule } from '@angular/material/button';
     BrowserModule,
     AppRoutingModule,
     BrowserAnimationsModule,
+    // Firebase Module
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFirestoreModule, // firestore
+    AngularFireAuthModule, // auth
+    AngularFireStorageModule, // storage
+    // Material Module
     MatTableModule,
     MatCardModule,
     MatButtonModule

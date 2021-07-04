@@ -3,7 +3,18 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  firebase:
+  {
+    apiKey: ***REMOVED***,
+    authDomain: "instagram-data-label-tool.firebaseapp.com",
+    projectId: "instagram-data-label-tool",
+    storageBucket: "instagram-data-label-tool.appspot.com",
+    messagingSenderId: "531391085958",
+    appId: "1:531391085958:web:367bd4a9ce646c92db0007",
+    measurementId: "G-P4R3NJ4YC1"
+  }
+
 };
 
 /*
