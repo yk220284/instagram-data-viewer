@@ -1,0 +1,15 @@
+<form class="example-form">
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Number</mat-label>
+    <input type="text" placeholder="Pick one" aria-label="Number" matInput
+      [matAutocomplete]="auto" [(ngModel)]="name" [formControl]="myControl">
+    <mat-autocomplete #auto="matAutocomplete">
+      <mat-option *ngFor="let option of filteredOptions | async"
+        [value]="option">
+        {{option}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+  <button mat-raised-button color="primary" (click)="onSubmit()">Update</button>
+</form>
+<div *ngFor="let item of items | async">{{item|json}}</div>
