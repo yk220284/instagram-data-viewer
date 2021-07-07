@@ -24,8 +24,24 @@ export class UploadTaskComponent implements OnInit {
   }
 
   startUpload() {
-    const task = this.presistDataService.uploadImage(this.file);
-    this.uploadPercent = task.percentageChanges();
+    const fileType: string = this.file.type.split('/').slice(-1)[0];
+    console.log("uploaded file of type: ", fileType);
+
+    switch (fileType) {
+      case "json": {
+        this.presistDataService.uploadLabel(this.file);
+        break;
+      }
+      case "png": {
+        const task = this.presistDataService.uploadImage(this.file);
+        this.uploadPercent = task.percentageChanges();
+        break;
+      }
+      default: {
+        console.log(`${this.file} is not in the required format`);
+        break;
+      }
+    }
   }
 
   isActive(snapshot: Observable<any>) {
