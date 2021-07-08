@@ -26,30 +26,6 @@ export class PresistDataService {
     this.items = this.itemsCollection.valueChanges({ idField: 'shortcode' });
   }
 
-  uploadLabel(jsonFile: File) {
-    const fileReader = new FileReader();
-    fileReader.readAsText(jsonFile, "UTF-8");
-    fileReader.onload = () => {
-      if (fileReader.result) {
-        const posts = JSON.parse(fileReader.result.toString());
-        for (const postSource of posts) {
-          const post: Post = {
-            display_url: postSource.display_url,
-            full_name: postSource.full_name,
-            shortcode: postSource.shortcode,
-            upload_date: postSource.upload_date,
-            username: postSource.username
-          }
-          // TODO: collect all Promises and add status bar
-          this.uploadPostJson(post).finally(() => console.log(`uploaded ${post}`));
-        }
-      }
-    }
-    fileReader.onerror = (error) => {
-      console.log(error);
-    }
-    return of([]);
-  }
 
   uploadImage(imageFile: File) {
     // The storage path

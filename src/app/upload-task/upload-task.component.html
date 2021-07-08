@@ -1,6 +1,11 @@
 <div *ngIf="uploadPercent | async as pct">
   <div mat-line>
-    <mat-icon>image</mat-icon>{{file.name}}
+    <div *ngIf="fileType=='json'">
+      <mat-icon>text_snippet</mat-icon>{{file.name}}
+    </div>
+    <div *ngIf="fileType=='png'">
+      <mat-icon>image</mat-icon>{{file.name}}
+    </div>
   </div>
   <progress class="progress is-info" [value]="pct" max="100">
   </progress>

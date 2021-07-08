@@ -6,6 +6,6 @@
 
 <h3>Uploads</h3>
 
-<div *ngFor="let file of files">
+<div *ngFor="let file of files.reverse()">
   <app-upload-task [file]="file"></app-upload-task>
 </div>
