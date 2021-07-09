@@ -11,6 +11,10 @@
 
 <h3>Uploads</h3>
 
-<div *ngFor="let file of files.reverse()">
-  <app-upload-task [file]="file"></app-upload-task>
+<div *ngIf="files.length">
+  <cdk-virtual-scroll-viewport itemSize="50" class="upload-files-viewport">
+    <div *ngFor="let file of files.reverse()">
+      <app-upload-task [file]="file"></app-upload-task>
+    </div>
+  </cdk-virtual-scroll-viewport>
 </div>

@@ -8,6 +8,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
 import { PostTableComponent } from './post-table/post-table.component'
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ScrollingModule } from '@angular/cdk/scrolling';
 
 // Material Module
 import { MatCardModule } from '@angular/material/card';
@@ -49,6 +50,7 @@ import { FormComponent } from './form/form.component';
     BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
+    ScrollingModule,
     // Firebase Module
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule, // auth
