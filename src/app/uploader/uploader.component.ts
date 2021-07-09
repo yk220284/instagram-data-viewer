@@ -7,8 +7,8 @@ import { Component, OnInit } from '@angular/core';
 })
 export class UploaderComponent implements OnInit {
   isHovering: boolean = false;
-
   files: File[] = [];
+  uploadedCnt = 0;
 
   toggleHover(event: boolean) {
     this.isHovering = event;
@@ -20,6 +20,10 @@ export class UploaderComponent implements OnInit {
     }
   }
 
+  countUploaded() {
+    this.uploadedCnt++;
+    console.log(`uploaded ${this.uploadedCnt / this.files.length}`);
+  }
   constructor() { }
 
   ngOnInit(): void {

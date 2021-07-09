@@ -12,9 +12,11 @@
 <h3>Uploads</h3>
 
 <div *ngIf="files.length">
+  <div>Uploaded {{uploadedCnt}} / {{files.length}} files</div>
   <cdk-virtual-scroll-viewport itemSize="50" class="upload-files-viewport">
     <div *ngFor="let file of files.reverse()">
-      <app-upload-task [file]="file"></app-upload-task>
+      <app-upload-task [file]="file" (uploaded)="countUploaded()">
+      </app-upload-task>
     </div>
   </cdk-virtual-scroll-viewport>
 </div>

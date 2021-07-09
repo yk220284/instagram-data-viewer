@@ -16,13 +16,17 @@ export class PresistDataService {
   private postJsonCollection: AngularFirestoreCollection<Post>;
   private items: Observable<Item[]>;
 
+  private imageUrlFolder: string = 'imageUrlNew';
+  private postFolder: string = 'postJsonNew';
+  private imageFolder: string = 'imgNew';
+
   constructor(
     private afs: AngularFirestore,
     private imageStorage: AngularFireStorage
   ) {
     this.itemsCollection = afs.collection<Item>('test');
-    this.imageUrlCollection = afs.collection<ImageUrl>('imageUrl');
-    this.postJsonCollection = afs.collection<Post>('postJson');
+    this.imageUrlCollection = afs.collection<ImageUrl>(this.imageUrlFolder);
+    this.postJsonCollection = afs.collection<Post>(this.postFolder);
     this.items = this.itemsCollection.valueChanges({ idField: 'shortcode' });
   }
 
@@ -30,15 +34,15 @@ export class PresistDataService {
   uploadImage(imageFile: File) {
     // The storage path
     const fileNameNoExt: string = imageFile.name.split('.').slice(0, -1).join('.');
-    const filePath = `/img/${fileNameNoExt}.png`;
+    const filePath = `/${this.imageFolder}/${fileNameNoExt}.png`;
     const fileRef = this.imageStorage.ref(filePath);
 
     const task = this.imageStorage.upload(filePath, imageFile);
     task.snapshotChanges().pipe(
-      finalize(() => {
-        fileRef.getDownloadURL().subscribe(url => this.addImageUrl(fileNameNoExt, url));
-      }
-      )).subscribe();
+      finalize(
+        () => {
+          fileRef.getDownloadURL().subscribe(url => this.addImageUrl(fileNameNoExt, url));
+        })).subscribe();
     return task;
   }
 

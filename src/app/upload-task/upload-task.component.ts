@@ -1,3 +1,5 @@
+import { PathLocationStrategy } from '@angular/common';
+import { Output, EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireStorage, AngularFireUploadTask } from '@angular/fire/storage';
@@ -16,12 +18,15 @@ export class UploadTaskComponent implements OnInit {
   @Input() file!: File;
   uploadPercent: Observable<number | undefined> | undefined;
   fileType: string | undefined;
+  @Output() uploaded: EventEmitter<boolean> = new EventEmitter();
+  bytesTransferred: number | undefined;
 
   constructor(
     private presistDataService: PresistDataService
   ) { }
 
   ngOnInit(): void {
+    console.log(this.file);
     this.startUpload();
   }
 
@@ -63,6 +68,9 @@ export class UploadTaskComponent implements OnInit {
       case "png": {
         const task = this.presistDataService.uploadImage(this.file);
         this.uploadPercent = task.percentageChanges();
+        task.snapshotChanges().pipe(
+          finalize(() => this.uploaded.emit())
+        ).subscribe();
         break;
       }
       default: {
