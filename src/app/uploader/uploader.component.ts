@@ -14,11 +14,10 @@ export class UploaderComponent implements OnInit {
     this.isHovering = event;
   }
 
-  onDrop(files: FileList) {
-    for (let i = 0; i < files.length; i++) {
-      this.files.push(files.item(i) as File);
+  filesPicied(files: any) {
+    for (const file of files) {
+      this.files.push(file as File);
     }
-    console.log(this.files);
   }
 
   constructor() { }
