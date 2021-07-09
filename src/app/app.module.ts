@@ -19,7 +19,9 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
+import { MatTabsModule } from '@angular/material/tabs';
 
 // Firebace Module
 import { AngularFireModule } from '@angular/fire';
@@ -65,6 +67,9 @@ import { FormComponent } from './form/form.component';
     MatAutocompleteModule,
     MatInputModule,
     MatFormFieldModule,
+    MatDividerModule,
+    MatGridListModule,
+    MatTabsModule,
   ],
   providers: [
     { provide: BUCKET, useValue: 'instagram-data-label-tool' }

@@ -7,4 +7,8 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'instagram-data-viewer';
+  navLinks = [
+    { path: "/posts", label: "Posts" },
+    { path: "/upload", label: "Uploads" }
+  ]
 }
