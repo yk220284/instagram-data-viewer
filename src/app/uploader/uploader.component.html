@@ -1,11 +1,13 @@
 <div class="dropzone" appDropzone (hovered)="toggleHover($event)"
   (dropped)="filesPicied($event)" [class.hovering]="isHovering">
-  <h3>AngularFire Drop Zone</h3>
-  <p>Drag and Drop a File</p>
+  <h3>Drop Zone</h3>
+  <p>Drag and Drop a .json File or .png Files</p>
 </div>
 
-<input appDropzone #folderInput type="file"
-  (change)="filesPicied(folderInput.files)" webkitDirectory>
+<input #folderInput hidden="true" type="file" onclick="this.value=null"
+  (change)="filesPicied(folderInput.files)" webkitDirectory />
+<button mat-flat-button color="primary" (click)="folderInput.click()">
+  Choose Image Folder</button>
 
 <h3>Uploads</h3>
 
