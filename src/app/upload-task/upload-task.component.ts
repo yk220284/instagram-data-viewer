@@ -37,6 +37,7 @@ export class UploadTaskComponent implements OnInit {
       if (fileReader.result) {
         const posts = JSON.parse(fileReader.result.toString());
         let completePostCnt = 0;
+        const tasks: Promise<any>[] = [];
         for (const postSource of posts) {
           const post: Post = {
             display_url: postSource.display_url,
@@ -45,10 +46,12 @@ export class UploadTaskComponent implements OnInit {
             upload_date: postSource.upload_date,
             username: postSource.username
           }
-          this.presistDataService.uploadPostJson(post).finally(() =>
-            this.uploadPercent = of(Math.ceil(completePostCnt++ / posts.length * 100))
+          tasks.push(
+            this.presistDataService.uploadPostJson(post)
           );
         }
+        Promise.all(tasks).finally(() => this.uploaded.emit());
+        tasks.forEach(task => task.finally(() => this.uploadPercent = of(Math.ceil(completePostCnt++ / posts.length * 100))));
       }
     }
     fileReader.onerror = (error) => {
