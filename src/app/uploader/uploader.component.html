@@ -9,8 +9,6 @@
 <button mat-flat-button color="primary" (click)="folderInput.click()">
   Choose Image Folder</button>
 
-<h3>Uploads</h3>
-
 <div *ngIf="files.length">
   <div>Uploaded {{uploadedCnt}} / {{files.length}} files</div>
   <cdk-virtual-scroll-viewport itemSize="50" class="upload-files-viewport">
