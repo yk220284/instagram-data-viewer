@@ -27,10 +27,10 @@ export class FormComponent implements OnInit {
   }
 
   name: string = "";
-  items: Observable<any>;
+  // items: Observable<any>;
 
   constructor(private presistDataService: PresistDataService) {
-    this.items = presistDataService.getItems();
+    // this.items = presistDataService.getItems();
   }
 
   onSubmit() {

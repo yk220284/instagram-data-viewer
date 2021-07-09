@@ -15,6 +15,7 @@ export class PresistDataService {
   private imageUrlCollection: AngularFirestoreCollection<ImageUrl>;
   private postJsonCollection: AngularFirestoreCollection<Post>;
   private items: Observable<Item[]>;
+  posts: Observable<Post[]>;
 
   private imageUrlFolder: string = 'imageUrlNew';
   private postFolder: string = 'postJsonNew';
@@ -28,6 +29,7 @@ export class PresistDataService {
     this.imageUrlCollection = afs.collection<ImageUrl>(this.imageUrlFolder);
     this.postJsonCollection = afs.collection<Post>(this.postFolder);
     this.items = this.itemsCollection.valueChanges({ idField: 'shortcode' });
+    this.posts = this.postJsonCollection.valueChanges({ idField: 'shortcode' });
   }
 
 
@@ -62,7 +64,12 @@ export class PresistDataService {
     return this.itemsCollection.doc(shortcode).set(item);
   }
 
-  getItems(): Observable<Item[]> {
-    return this.items
+  getPost(shortcode: string): Observable<any> {
+    return this.afs.collection(this.postFolder, ref => ref.where('shortcode', '==', shortcode)).valueChanges();
   }
+
+  getImageUrl(shortcode: string): Observable<any> {
+    return this.afs.collection(this.imageUrlFolder, ref => ref.where('shortcode', '==', shortcode)).valueChanges();
+  }
+
 }

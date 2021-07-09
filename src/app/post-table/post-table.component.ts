@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Post } from 'src/post';
 import { PostDataService } from '../post-data.service';
+import { PresistDataService } from '../presist-data.service';
 
 @Component({
   selector: 'app-post-table',
@@ -13,11 +14,11 @@ export class PostTableComponent implements OnInit {
   dataSource: Post[] = [];
   clickedRows = new Set<Post>();
 
-  constructor(private postDataService: PostDataService) { }
+  constructor(private presistDataService: PresistDataService,
+  ) { }
 
   ngOnInit(): void {
-    this.postDataService.getPosts().subscribe(posts => this.dataSource = posts);
+    this.presistDataService.posts.subscribe(posts => this.dataSource = posts);
     console.log(this.dataSource);
-
   }
 }
