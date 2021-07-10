@@ -1,28 +1,41 @@
 <div *ngIf="post">
-  <mat-card class="example-card">
+  <mat-grid-list cols="2" rowHeight="100px">
+    <mat-grid-tile [colspan]="1" [rowspan]="8" [style.background]="'#DDBDF1'">
+      <mat-card class="example-card">
+        <img mat-card-image class="postImg" [src]="url" alt="no image">
+        <mat-card-header>
+          <mat-card-title>{{post.username}}</mat-card-title>
+          <mat-card-subtitle>
+            {{post.full_name}}
+          </mat-card-subtitle>
+        </mat-card-header>
+        <mat-card-content>
+          <span class="guide-text">{{post.upload_date}}</span>
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
+            quasi numquam a assumenda culpa unde deserunt impedit cupiditate
+            facere minus! Voluptatum cumque doloribus adipisci nulla totam
+            expedita id eveniet mollitia?
+          </p>
+        </mat-card-content>
+      </mat-card>
+    </mat-grid-tile>
 
-    <mat-divider></mat-divider>
-    <img mat-card-image [src]="url" alt="no image">
+    <mat-grid-tile [colspan]="1" [rowspan]="4" [style.background]="'lightblue'">
+      <p><span class="guide-text">Text extracted</span> Lorem, ipsum dolor sit
+        amet consectetur adipisicing elit. Consectetur fugit velit beatae vel
+        quia porro dolores repellat corrupti, rem saepe voluptatum accusamus
+        optio laudantium accusantium necessitatibus veritatis itaque! Placeat,
+        nesciunt.</p>
+    </mat-grid-tile>
 
-    <mat-card-header>
-      <mat-card-title>{{post.username}}</mat-card-title>
-      <mat-card-subtitle>{{post.full_name}}</mat-card-subtitle>
-    </mat-card-header>
-
-
-    <mat-divider></mat-divider>
-    <mat-card-content>
-      <li>
-        Uploaded Date: {{post.upload_date | date}}
-      </li>
-    </mat-card-content>
-
-    <mat-divider></mat-divider>
-    <mat-card-actions>
+    <mat-grid-tile [colspan]="1" [rowspan]="4"
+      [style.background]="'lightgreen'">
       <app-form></app-form>
-    </mat-card-actions>
-  </mat-card>
+    </mat-grid-tile>
 
-  <!-- <div>{{post|json}}</div> -->
-  <div>{{url}}</div>
+  </mat-grid-list>
+
+
+
 </div>

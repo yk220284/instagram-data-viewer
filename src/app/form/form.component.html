@@ -1,8 +1,9 @@
 <form class="example-form">
+  <!-- username -->
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Number</mat-label>
-    <input type="text" placeholder="Pick one" aria-label="Number" matInput
-      [matAutocomplete]="auto" [(ngModel)]="name" [formControl]="myControl">
+    <mat-label>Username</mat-label>
+    <input type="text" placeholder="Pick username" aria-label="Number" matInput
+      [matAutocomplete]="auto" [(ngModel)]="userName" [formControl]="myControl">
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let option of filteredOptions | async"
         [value]="option">
@@ -10,6 +11,19 @@
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
-  <button mat-raised-button color="primary" (click)="onSubmit()">Update</button>
+
+
+  <!-- full name -->
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Full Name</mat-label>
+    <input type="text" placeholder="Pick full name" aria-label="Number" matInput
+      [matAutocomplete]="auto" [(ngModel)]="fullName" [formControl]="myControl">
+  </mat-form-field>
+  <div class="example-button-row">
+    <button mat-raised-button color="primary"
+      (click)="onSubmit()">Submit</button>
+    <button mat-raised-button color="warn"
+      (click)="onSubmit()">Irrlevant</button>
+  </div>
 </form>
 <!-- <div *ngFor="let item of items | async">{{item|json}}</div> -->

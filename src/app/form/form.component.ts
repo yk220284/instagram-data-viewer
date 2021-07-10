@@ -26,7 +26,8 @@ export class FormComponent implements OnInit {
     );
   }
 
-  name: string = "";
+  userName: string = "";
+  fullName: string = "";
   // items: Observable<any>;
 
   constructor(private presistDataService: PresistDataService) {
@@ -34,18 +35,18 @@ export class FormComponent implements OnInit {
   }
 
   onSubmit() {
-    this.name = this.name.trim();
-    if (!this.name) {
-      return;
-    }
-    this.presistDataService.addItem(this.name)
-      .then(res => {
-        console.log(res);
-        this.myControl.reset();
-      })
-      .catch(e => {
-        console.log("err: ", e);
-      })
+    // this.name = this.name.trim();
+    // if (!this.name) {
+    //   return;
+    // }
+    // this.presistDataService.addItem(this.name)
+    //   .then(res => {
+    //     console.log(res);
+    //     this.myControl.reset();
+    //   })
+    //   .catch(e => {
+    //     console.log("err: ", e);
+    //   })
   }
 
 }
