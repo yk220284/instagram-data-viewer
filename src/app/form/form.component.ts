@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { AbstractControl, FormControl, FormGroup, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
+import { Component, Input, OnInit } from '@angular/core';
+import { AbstractControl, FormControl, FormGroup, FormGroupDirective, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PresistDataService } from '../presist-data.service';
+import { Profile } from '../../profile';
+import { Post } from 'src/post';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -17,11 +19,13 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   styleUrls: ['./form.component.css']
 })
 export class FormComponent implements OnInit {
-  // Autocomplet Form
   profileForm = new FormGroup({
     userName: new FormControl('', [Validators.required, forbiddenNameValidator(/ /i)]),
     fullName: new FormControl(''),
   });
+  @Input() post!: Post;
+  @Input() url!: string;
+  // Autocomplet Form
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]> = of([]);
   private _filter(value: string): string[] {
@@ -45,9 +49,22 @@ export class FormComponent implements OnInit {
     return control!.invalid && (control!.dirty || control!.touched);
   }
 
-  onSubmit() {
-    console.warn(this.profileForm.value);
-
+  onSubmit(formData: any, formDir: FormGroupDirective) {
+    const profile: Profile = {
+      username: this.profileForm.get("userName")!.value,
+      full_name: this.profileForm.get("fullName")!.value,
+      url: this.url,
+      shortcode: this.post.shortcode
+    }
+    this.presistDataService.addProfile(profile)
+      .then(() => {
+        this.presistDataService.movePostJson(profile.shortcode);
+        formDir.resetForm();
+        this.profileForm.reset();
+      })
+      .catch(e => {
+        console.log("err: ", e);
+      })
     // this.name = this.name.trim();
     // if (!this.name) {
     //   return;

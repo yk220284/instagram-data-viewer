@@ -31,7 +31,9 @@
 
     <mat-grid-tile [colspan]="1" [rowspan]="4"
       [style.background]="'lightgreen'">
-      <app-form></app-form>
+      <div *ngIf="url && post">
+        <app-form [post]="post" [url]="url"></app-form>
+      </div>
     </mat-grid-tile>
 
   </mat-grid-list>

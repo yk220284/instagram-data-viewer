@@ -1,5 +1,5 @@
-<form class="example-form" [formGroup]="profileForm" (ngSubmit)="onSubmit()"
-  class="form-group">
+<form class="example-form" [formGroup]="profileForm" #formDir="ngForm"
+  (ngSubmit)="onSubmit(profileForm, formDir) " class="form-group">
   <!-- username -->
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label for="userName">Username</mat-label>
@@ -39,8 +39,7 @@
       [disabled]="!profileForm.valid">
       Submit
     </button>
-    <button type="submit" mat-raised-button color="warn"
-      (click)="onSubmit()">Irrlevant</button>
+    <button type="submit" mat-raised-button color="warn">Irrlevant</button>
   </div>
 </form>
 <!-- <div *ngFor="let item of items | async">{{item|json}}</div> -->

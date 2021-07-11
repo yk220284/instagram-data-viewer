@@ -25,22 +25,14 @@ export class PostDetailComponent implements OnInit {
   }
 
   getPost(shortcode: string): void {
-    this.presistDataService.getPost(shortcode).subscribe((posts: Post[]) => {
-      if (posts.length !== 1) {
-        console.log(`Query by shortcode got ${posts.length} posts`);
-      } else {
-        this.post = posts[0];
-      }
+    this.presistDataService.getPostUnprocessed(shortcode).subscribe((post: Post) => {
+      this.post = post;
     });
   }
 
   getImageUrl(shortcode: string) {
-    this.presistDataService.getImageUrl(shortcode).subscribe(urls => {
-      if (urls.length !== 1) {
-        console.log(`Query by shortcode got ${urls.length} urls`);
-      } else {
-        this.url = urls[0].url;
-      }
+    this.presistDataService.getImageUrl(shortcode).subscribe(urlJson => {
+      this.url = urlJson.url;
     });
   }
 
