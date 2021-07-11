@@ -1,9 +1,10 @@
-<form class="example-form">
+<form class="example-form" [formGroup]="profileForm" (ngSubmit)="onSubmit()"
+  class="form-group">
   <!-- username -->
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Username</mat-label>
+    <mat-label for="userName">Username</mat-label>
     <input type="text" placeholder="Pick username" aria-label="Number" matInput
-      [matAutocomplete]="auto" [(ngModel)]="userName" [formControl]="myControl">
+      [matAutocomplete]="auto" formControlName="userName">
     <mat-autocomplete #auto="matAutocomplete">
       <mat-option *ngFor="let option of filteredOptions | async"
         [value]="option">
@@ -12,17 +13,33 @@
     </mat-autocomplete>
   </mat-form-field>
 
-
   <!-- full name -->
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>Full Name</mat-label>
     <input type="text" placeholder="Pick full name" aria-label="Number" matInput
-      [matAutocomplete]="auto" [(ngModel)]="fullName" [formControl]="myControl">
+      [matAutocomplete]="auto" formControlName="fullName">
   </mat-form-field>
+
+  <!-- error -->
+  <div
+    [class.cross-validation-error]="profileForm.errors?.identityRevealed && (profileForm.touched || profileForm.dirty)">
+    <div *ngIf="validateFormControl('userName')" class="alert alert-danger">
+      <div *ngIf="profileForm.get('userName')!.errors?.required">
+        Username is required.
+      </div>
+      <div *ngIf="profileForm.get('userName')!.errors?.forbiddenName"
+        class="alert alert-danger">
+        Space is not allowed.
+      </div>
+    </div>
+  </div>
+
   <div class="example-button-row">
-    <button mat-raised-button color="primary"
-      (click)="onSubmit()">Submit</button>
-    <button mat-raised-button color="warn"
+    <button mat-raised-button color="primary" type="submit"
+      [disabled]="!profileForm.valid">
+      Submit
+    </button>
+    <button type="submit" mat-raised-button color="warn"
       (click)="onSubmit()">Irrlevant</button>
   </div>
 </form>
