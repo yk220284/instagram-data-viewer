@@ -9,6 +9,7 @@ export class AppComponent {
   title = 'instagram-data-viewer';
   navLinks = [
     { path: "/posts", label: "Posts" },
+    { path: "/processed-posts", label: "Processed Posts" },
     { path: "/upload", label: "Uploads" }
   ]
 }

@@ -34,6 +34,8 @@ import { DropzoneDirective } from './dropzone.directive';
 import { UploaderComponent } from './uploader/uploader.component';
 import { UploadTaskComponent } from './upload-task/upload-task.component';
 import { FormComponent } from './form/form.component';
+import { ProcessedPostTableComponent } from './processed-post-table/processed-post-table.component';
+import { TemplateTableComponent } from './template-table/template-table.component';
 
 
 @NgModule({
@@ -45,6 +47,8 @@ import { FormComponent } from './form/form.component';
     UploaderComponent,
     UploadTaskComponent,
     FormComponent,
+    ProcessedPostTableComponent,
+    TemplateTableComponent,
   ],
   imports: [
     BrowserModule,

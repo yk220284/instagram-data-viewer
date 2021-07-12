@@ -4,8 +4,15 @@ import {
   AngularFirestoreCollection,
 } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { Observable, of } from 'rxjs';
-import { finalize, map } from 'rxjs/operators';
+import { combineLatest, forkJoin, from, Observable, of, zip } from 'rxjs';
+import {
+  finalize,
+  first,
+  last,
+  map,
+  mergeMap,
+  withLatestFrom,
+} from 'rxjs/operators';
 import { Post } from 'src/post';
 import { Profile } from 'src/profile';
 export interface Item {
@@ -28,7 +35,8 @@ export class PresistDataService {
   private profileCollection: AngularFirestoreCollection<Profile>;
 
   private items: Observable<Item[]>;
-  posts: Observable<Post[]>;
+  unprocessedPosts: Observable<Post[]>;
+  processedPosts: Observable<Post[]>;
 
   private imageUrlFolder: string = 'imageUrlNew';
   private postUnprocessedFolder: string = 'postJsonNew';
@@ -50,7 +58,10 @@ export class PresistDataService {
     );
     this.profileCollection = afs.collection<Profile>(this.profileFolder);
     this.items = this.itemsCollection.valueChanges({ idField: 'shortcode' });
-    this.posts = this.postUnprocessedCollection.valueChanges({
+    this.unprocessedPosts = this.postUnprocessedCollection.valueChanges({
+      idField: 'shortcode',
+    });
+    this.processedPosts = this.postProcessedCollection.valueChanges({
       idField: 'shortcode',
     });
   }
@@ -79,23 +90,51 @@ export class PresistDataService {
   }
 
   movePostJson(shortcode: string) {
-    this.getPostUnprocessed(shortcode)
-      .pipe(
-        map((post: Post) => {
-          console.log('adding post', post);
-          this.postProcessedCollection
-            .doc(shortcode)
-            .set(post)
-            .then(() =>
-              this.postUnprocessedCollection.doc(post.shortcode).delete()
-            );
-        })
-      )
-      .subscribe();
+    return this.getPostUnprocessed(shortcode).pipe(
+      map((post: Post) => {
+        console.log('adding post', post);
+        this.postProcessedCollection
+          .doc(shortcode)
+          .set(post)
+          .then(() =>
+            this.postUnprocessedCollection.doc(post.shortcode).delete()
+          );
+      })
+    );
   }
 
   uploadPostJson(post: Post) {
-    return this.postUnprocessedCollection.doc(post.shortcode).set(post);
+    // return this.getPostUnprocessed(post.shortcode).pipe(
+    //   first(),
+    //   withLatestFrom(this.getPostProcessed(post.shortcode)),
+    //   mergeMap(([uP, pP]) => {
+    //     console.log(`up: ${uP} pp: ${pP}`);
+    //     if (uP !== null || pP !== null) {
+    //       console.log('already proccessed this post');
+    //       return of('Not uploading');
+    //     } else {
+    //       return from(
+    //         this.postUnprocessedCollection.doc(post.shortcode).set(post)
+    //       );
+    //     }
+    //   })
+    // );
+    return forkJoin([
+      this.getPostUnprocessed(post.shortcode).pipe(first()),
+      this.getPostProcessed(post.shortcode).pipe(first()),
+    ]).pipe(
+      mergeMap(([uP, pP]) => {
+        console.log(`up: ${uP} pp: ${pP}`);
+        if (uP === null && pP === null) {
+          return from(
+            this.postUnprocessedCollection.doc(post.shortcode).set(post)
+          );
+        } else {
+          console.log('already proccessed this post');
+          return of('Not uploading');
+        }
+      })
+    );
   }
 
   private addImageUrl(shortcode: string, url: string) {
@@ -105,6 +144,13 @@ export class PresistDataService {
 
   addProfile(profile: Profile) {
     return this.profileCollection.doc(profile.shortcode).set(profile);
+  }
+
+  updateProfile(profile: Profile) {
+    let partialProfile = Object.fromEntries(
+      Object.entries(profile).filter(([_, v]) => v != '')
+    );
+    return this.profileCollection.doc(profile.shortcode).update(partialProfile);
   }
 
   addItem(name: string) {
@@ -121,7 +167,10 @@ export class PresistDataService {
       .pipe(
         map((values) => {
           if (values.length !== 1) {
-            console.log(`Query by shortcode got ${values.length} posts`);
+            console.log(
+              `Query by shortcode ${shortcode} in ${collection} got ${values.length} posts`
+            );
+            return null;
           } else {
             return values[0];
           }
@@ -131,6 +180,9 @@ export class PresistDataService {
 
   getPostUnprocessed(shortcode: string): Observable<any> {
     return this._getPost(this.postUnprocessedFolder, shortcode);
+  }
+  getPostProcessed(shortcode: string): Observable<any> {
+    return this._getPost(this.postProcessedFolder, shortcode);
   }
 
   getImageUrl(shortcode: string): Observable<any> {
