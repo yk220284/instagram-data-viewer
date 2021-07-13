@@ -6,6 +6,7 @@ import {
 import { AngularFireStorage } from '@angular/fire/storage';
 import { combineLatest, forkJoin, from, Observable, of, zip } from 'rxjs';
 import {
+  filter,
   finalize,
   first,
   last,
@@ -68,6 +69,23 @@ export class PresistDataService {
     });
   }
 
+  getNextPost(shortcode: string) {
+    return this.unprocessedPosts.pipe(
+      map((posts) => {
+        if (posts.length <= 1) {
+          console.log(`we have ${posts.length - 1} posts unprocessed`);
+          return null;
+        }
+        const cur_idx = posts.findIndex((post) => post.shortcode === shortcode);
+        if (cur_idx < 0) {
+          console.log('cannot find this post, err, give the first post');
+          return posts[0];
+        }
+        return posts[(cur_idx + 1) % posts.length];
+      })
+    );
+  }
+
   uploadImage(imageFile: File) {
     // The storage path
     const fileNameNoExt: string = imageFile.name
@@ -106,21 +124,6 @@ export class PresistDataService {
   }
 
   uploadPostJson(post: Post) {
-    // return this.getPostUnprocessed(post.shortcode).pipe(
-    //   first(),
-    //   withLatestFrom(this.getPostProcessed(post.shortcode)),
-    //   mergeMap(([uP, pP]) => {
-    //     console.log(`up: ${uP} pp: ${pP}`);
-    //     if (uP !== null || pP !== null) {
-    //       console.log('already proccessed this post');
-    //       return of('Not uploading');
-    //     } else {
-    //       return from(
-    //         this.postUnprocessedCollection.doc(post.shortcode).set(post)
-    //       );
-    //     }
-    //   })
-    // );
     return combineLatest([
       this.getPostUnprocessed(post.shortcode),
       this.getPostProcessed(post.shortcode),

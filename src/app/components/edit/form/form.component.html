@@ -66,15 +66,20 @@
   </div>
 
   <div class="example-button-row">
-    <button
-      mat-raised-button
-      color="primary"
-      type="submit"
-      [disabled]="!profileForm.valid"
-    >
-      Submit
-    </button>
-    <button type="submit" mat-raised-button color="warn">Irrlevant</button>
+    <fieldset ng-disabled="url===undefined">
+      <button
+        mat-raised-button
+        color="primary"
+        type="submit"
+        [disabled]="!profileForm.valid"
+      >
+        Submit
+      </button>
+      <button type="submit" mat-raised-button color="warn">Irrlevant</button>
+    </fieldset>
   </div>
 </form>
+<button mat-raised-button routerLink="{{ nextRoute }}">Link</button>
+
+{{ this.nextRoute }}
 <!-- <div *ngFor="let item of items | async">{{item|json}}</div> -->

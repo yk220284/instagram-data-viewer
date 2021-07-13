@@ -10,11 +10,15 @@ const routes: Routes = [
   { path: 'posts', component: PostTableComponent },
   { path: 'processed-posts', component: ProcessedPostTableComponent },
   { path: 'upload', component: UploaderComponent },
-  { path: 'detail/:id', component: PostDetailComponent },
+  {
+    path: 'detail/:id',
+    component: PostDetailComponent,
+    runGuardsAndResolvers: 'paramsChange',
+  },
 ];
 
 @NgModule({
-  imports: [RouterModule.forRoot(routes)],
+  imports: [RouterModule.forRoot(routes, { onSameUrlNavigation: 'reload' })],
   exports: [RouterModule],
 })
 export class AppRoutingModule {}

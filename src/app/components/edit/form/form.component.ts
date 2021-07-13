@@ -1,4 +1,4 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -26,7 +26,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css'],
 })
-export class FormComponent implements OnInit {
+export class FormComponent implements OnInit, OnChanges {
   profileForm = new FormGroup({
     username: new FormControl('', [
       Validators.required,
@@ -38,6 +38,7 @@ export class FormComponent implements OnInit {
   @Input() url!: string;
   @Input() isProcessed!: boolean;
   profile: Profile | undefined;
+  nextRoute: string | undefined;
 
   // Autocomplet Form
   options: string[] = ['One', 'Two', 'Three'];
@@ -51,6 +52,15 @@ export class FormComponent implements OnInit {
     }
     return this.options;
   }
+  getNextRoute() {
+    this.presistDataService
+      .getNextPost(this.post.shortcode)
+      .subscribe(
+        (p) =>
+          (this.nextRoute =
+            p === null ? '/processed-posts' : `/detail/${p.shortcode}`)
+      );
+  }
   ngOnInit(): void {
     // Fill in form if processed
     if (this.isProcessed) {
@@ -62,12 +72,17 @@ export class FormComponent implements OnInit {
           this.profileForm.get('full_name')?.setValue(profile.full_name);
         });
     }
+    this.getNextRoute();
     // Autocomplete form
     this.filteredOptions = this.profileForm.get('username')!.valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value))
     );
     console.log(`is Processed: ${this.isProcessed}`);
+  }
+
+  ngOnChanges() {
+    this.getNextRoute();
   }
 
   constructor(private presistDataService: PresistDataService) {}
