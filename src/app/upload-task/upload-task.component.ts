@@ -40,7 +40,18 @@ export class UploadTaskComponent implements OnInit {
             upload_date: postSource.upload_date,
             username: postSource.username,
           };
-          tasks.push(this.presistDataService.uploadPostJson(post));
+          tasks.push(
+            this.presistDataService
+              .uploadPostJson(post)
+              .pipe(
+                finalize(
+                  () =>
+                    (this.uploadPercent = of(
+                      Math.ceil((++completePostCnt / posts.length) * 100)
+                    ))
+                )
+              )
+          );
         }
         forkJoin(tasks)
           .pipe(
@@ -50,18 +61,7 @@ export class UploadTaskComponent implements OnInit {
             })
           )
           .subscribe();
-        tasks.forEach((task) =>
-          task
-            .pipe(
-              finalize(
-                () =>
-                  (this.uploadPercent = of(
-                    Math.ceil((++completePostCnt / posts.length) * 100)
-                  ))
-              )
-            )
-            .subscribe()
-        );
+        // tasks.forEach((task) => task.subscribe());
       }
     };
     fileReader.onerror = (error) => {

@@ -11,6 +11,8 @@ import {
   last,
   map,
   mergeMap,
+  take,
+  tap,
   withLatestFrom,
 } from 'rxjs/operators';
 import { Post } from 'src/post';
@@ -119,12 +121,13 @@ export class PresistDataService {
     //     }
     //   })
     // );
-    return forkJoin([
-      this.getPostUnprocessed(post.shortcode).pipe(first()),
-      this.getPostProcessed(post.shortcode).pipe(first()),
+    return combineLatest([
+      this.getPostUnprocessed(post.shortcode),
+      this.getPostProcessed(post.shortcode),
     ]).pipe(
+      take(1),
+      tap(([uP, pP]) => console.log(`up: ${uP} pp: ${pP}`)),
       mergeMap(([uP, pP]) => {
-        console.log(`up: ${uP} pp: ${pP}`);
         if (uP === null && pP === null) {
           return from(
             this.postUnprocessedCollection.doc(post.shortcode).set(post)
@@ -148,7 +151,7 @@ export class PresistDataService {
 
   updateProfile(profile: Profile) {
     let partialProfile = Object.fromEntries(
-      Object.entries(profile).filter(([_, v]) => v != '')
+      Object.entries(profile).filter(([_, v]) => !!v)
     );
     return this.profileCollection.doc(profile.shortcode).update(partialProfile);
   }
