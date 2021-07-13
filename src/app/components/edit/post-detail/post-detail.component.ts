@@ -1,7 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Post } from 'src/post';
 import { ActivatedRoute } from '@angular/router';
-import { PostDataService } from '../../../post-data.service';
 import { PresistDataService } from '../../../services/presist-data.service';
 
 @Component({
