@@ -3,7 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { forkJoin, Observable, of, zip } from 'rxjs';
 import { finalize, first, tap } from 'rxjs/operators';
 import { Post } from 'src/post';
-import { PresistDataService } from '../presist-data.service';
+import { PresistDataService } from '../../../services/presist-data.service';
 
 @Component({
   selector: 'app-upload-task',

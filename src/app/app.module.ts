@@ -3,10 +3,10 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { PostDetailComponent } from './post-detail/post-detail.component';
+import { PostDetailComponent } from './components/edit/post-detail/post-detail.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatTableModule } from '@angular/material/table';
-import { PostTableComponent } from './post-table/post-table.component'
+import { PostTableComponent } from './components/display/post-table/post-table.component';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
@@ -31,12 +31,11 @@ import { AngularFireAuthModule } from '@angular/fire/auth';
 
 import { environment } from 'src/environments/environment';
 import { DropzoneDirective } from './dropzone.directive';
-import { UploaderComponent } from './uploader/uploader.component';
-import { UploadTaskComponent } from './upload-task/upload-task.component';
-import { FormComponent } from './form/form.component';
-import { ProcessedPostTableComponent } from './processed-post-table/processed-post-table.component';
-import { TemplateTableComponent } from './template-table/template-table.component';
-
+import { UploaderComponent } from './components/uploading/uploader/uploader.component';
+import { UploadTaskComponent } from './components/uploading/upload-task/upload-task.component';
+import { FormComponent } from './components/edit/form/form.component';
+import { ProcessedPostTableComponent } from './components/display/processed-post-table/processed-post-table.component';
+import { TemplateTableComponent } from './components/display/template-table/template-table.component';
 
 @NgModule({
   declarations: [
@@ -75,9 +74,7 @@ import { TemplateTableComponent } from './template-table/template-table.componen
     MatGridListModule,
     MatTabsModule,
   ],
-  providers: [
-    { provide: BUCKET, useValue: 'instagram-data-label-tool' }
-  ],
-  bootstrap: [AppComponent]
+  providers: [{ provide: BUCKET, useValue: 'instagram-data-label-tool' }],
+  bootstrap: [AppComponent],
 })
-export class AppModule { }
+export class AppModule {}

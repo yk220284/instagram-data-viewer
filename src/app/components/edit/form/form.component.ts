@@ -10,8 +10,8 @@ import {
 } from '@angular/forms';
 import { from, Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
-import { PresistDataService } from '../presist-data.service';
-import { Profile } from '../../profile';
+import { PresistDataService } from '../../../services/presist-data.service';
+import { Profile } from '../../../../profile';
 import { Post } from 'src/post';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {

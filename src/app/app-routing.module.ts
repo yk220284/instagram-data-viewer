@@ -1,9 +1,9 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { PostDetailComponent } from './post-detail/post-detail.component';
-import { PostTableComponent } from './post-table/post-table.component';
-import { ProcessedPostTableComponent } from './processed-post-table/processed-post-table.component';
-import { UploaderComponent } from './uploader/uploader.component';
+import { PostDetailComponent } from './components/edit/post-detail/post-detail.component';
+import { PostTableComponent } from './components/display/post-table/post-table.component';
+import { ProcessedPostTableComponent } from './components/display/processed-post-table/processed-post-table.component';
+import { UploaderComponent } from './components/uploading/uploader/uploader.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/posts', pathMatch: 'full' },
@@ -15,6 +15,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [RouterModule.forRoot(routes)],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}
