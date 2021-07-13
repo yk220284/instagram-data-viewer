@@ -149,6 +149,10 @@ export class PresistDataService {
     return this.profileCollection.doc(profile.shortcode).set(profile);
   }
 
+  getProfile(shortcode: string) {
+    return this._getDocByShortcode(this.profileFolder, shortcode);
+  }
+
   updateProfile(profile: Profile) {
     let partialProfile = Object.fromEntries(
       Object.entries(profile).filter(([_, v]) => !!v)
@@ -163,7 +167,7 @@ export class PresistDataService {
     return this.itemsCollection.doc(shortcode).set(item);
   }
 
-  _getPost(collection: string, shortcode: string): Observable<any> {
+  _getDocByShortcode(collection: string, shortcode: string): Observable<any> {
     return this.afs
       .collection(collection, (ref) => ref.where('shortcode', '==', shortcode))
       .valueChanges()
@@ -182,13 +186,13 @@ export class PresistDataService {
   }
 
   getPostUnprocessed(shortcode: string): Observable<any> {
-    return this._getPost(this.postUnprocessedFolder, shortcode);
+    return this._getDocByShortcode(this.postUnprocessedFolder, shortcode);
   }
   getPostProcessed(shortcode: string): Observable<any> {
-    return this._getPost(this.postProcessedFolder, shortcode);
+    return this._getDocByShortcode(this.postProcessedFolder, shortcode);
   }
 
   getImageUrl(shortcode: string): Observable<any> {
-    return this._getPost(this.imageUrlFolder, shortcode);
+    return this._getDocByShortcode(this.imageUrlFolder, shortcode);
   }
 }

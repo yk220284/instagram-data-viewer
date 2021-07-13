@@ -28,38 +28,66 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 })
 export class FormComponent implements OnInit {
   profileForm = new FormGroup({
-    userName: new FormControl('', [
+    username: new FormControl('', [
       Validators.required,
       forbiddenNameValidator(/ /i),
     ]),
-    fullName: new FormControl(''),
+    full_name: new FormControl(''),
   });
   @Input() post!: Post;
   @Input() url!: string;
   @Input() isProcessed!: boolean;
+  profile: Profile | undefined;
 
   // Autocomplet Form
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]> = of([]);
   private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-    return this.options.filter((option) =>
-      option.toLowerCase().includes(filterValue)
-    );
+    if (!!value) {
+      const filterValue = value.toLowerCase();
+      return this.options.filter((option) =>
+        option.toLowerCase().includes(filterValue)
+      );
+    }
+    return this.options;
   }
   ngOnInit(): void {
+    // Fill in form if processed
+    if (this.isProcessed) {
+      this.presistDataService
+        .getProfile(this.post.shortcode)
+        .subscribe((profile) => {
+          this.profile = profile;
+          this.profileForm.get('username')?.setValue(profile.username);
+          this.profileForm.get('full_name')?.setValue(profile.full_name);
+        });
+    }
     // Autocomplete form
-    this.filteredOptions = this.profileForm.get('userName')!.valueChanges.pipe(
+    this.filteredOptions = this.profileForm.get('username')!.valueChanges.pipe(
       startWith(''),
       map((value: string) => this._filter(value))
     );
     console.log(`is Processed: ${this.isProcessed}`);
   }
-  // items: Observable<any>;
 
-  constructor(private presistDataService: PresistDataService) {
-    // this.items = presistDataService.getItems();
+  constructor(private presistDataService: PresistDataService) {}
+
+  fieldChanged(controlName: 'username' | 'full_name') {
+    if (this.isProcessed && this.profile)
+      return (
+        this.profileForm.get(controlName)?.value === this.profile[controlName]
+      );
+    return false;
   }
+
+  fullNameChanged() {
+    if (this.isProcessed)
+      return (
+        this.profileForm.get('full_name')?.value === this.profile?.full_name
+      );
+    return false;
+  }
+
   validateFormControl(formControlName: string) {
     let control = this.profileForm.get(formControlName);
     return control!.invalid && (control!.dirty || control!.touched);
@@ -79,8 +107,8 @@ export class FormComponent implements OnInit {
 
   onSubmit(formData: any, formDir: FormGroupDirective) {
     const profile: Profile = {
-      username: this.profileForm.get('userName')!.value,
-      full_name: this.profileForm.get('fullName')!.value,
+      username: this.profileForm.get('username')!.value,
+      full_name: this.profileForm.get('full_name')!.value,
       url: this.url,
       shortcode: this.post.shortcode,
     };
@@ -93,17 +121,4 @@ export class FormComponent implements OnInit {
         console.log('err: ', e);
       });
   }
-
-  // this.name = this.name.trim();
-  // if (!this.name) {
-  //   return;
-  // }
-  // this.presistDataService.addItem(this.name)
-  //   .then(res => {
-  //     console.log(res);
-  //     this.myControl.reset();
-  //   })
-  //   .catch(e => {
-  //     console.log("err: ", e);
-  //   })
 }

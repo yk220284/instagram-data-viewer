@@ -1,16 +1,22 @@
 <div *ngIf="post">
-  <mat-grid-list cols="2" rowHeight="100px">
-    <mat-grid-tile [colspan]="1" [rowspan]="8" [style.background]="'#DDBDF1'">
+  <!-- pic-section -->
+  <mat-grid-list cols="2" rowHeight="100px" [gutterSize]="'1rem'">
+    <mat-grid-tile
+      [colspan]="1"
+      [rowspan]="8"
+      [style.background]="isProcessed ? '#F6F6F6' : '#DDBDF1'"
+      class="pic-section"
+    >
       <mat-card class="example-card">
-        <img mat-card-image class="postImg" [src]="url" alt="no image">
+        <img mat-card-image class="postImg" [src]="url" alt="no image" />
         <mat-card-header>
-          <mat-card-title>{{post.username}}</mat-card-title>
+          <mat-card-title>{{ post.username }}</mat-card-title>
           <mat-card-subtitle>
-            {{post.full_name}}
+            {{ post.full_name }}
           </mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <span class="guide-text">{{post.upload_date}}</span>
+          <span class="guide-text">{{ post.upload_date }}</span>
           <p>
             Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
             quasi numquam a assumenda culpa unde deserunt impedit cupiditate
@@ -21,24 +27,34 @@
       </mat-card>
     </mat-grid-tile>
 
-    <mat-grid-tile [colspan]="1" [rowspan]="4" [style.background]="'lightblue'">
-      <p><span class="guide-text">Text extracted</span> Lorem, ipsum dolor sit
-        amet consectetur adipisicing elit. Consectetur fugit velit beatae vel
-        quia porro dolores repellat corrupti, rem saepe voluptatum accusamus
-        optio laudantium accusantium necessitatibus veritatis itaque! Placeat,
-        nesciunt.</p>
+    <!-- text-section -->
+    <mat-grid-tile
+      [colspan]="1"
+      [rowspan]="4"
+      [style.background]="isProcessed ? '#F6F6F6' : 'lightblue'"
+      class="text-section"
+    >
+      <span class="text-extraction-box">
+        <p>
+          <span class="guide-text">Text extracted</span> Lorem, ipsum dolor sit
+          amet consectetur adipisicing elit. Consectetur fugit velit beatae vel
+          quia porro dolores repellat corrupti, rem saepe voluptatum accusamus
+          optio laudantium accusantium necessitatibus veritatis itaque! Placeat,
+          nesciunt.
+        </p>
+      </span>
     </mat-grid-tile>
 
-    <mat-grid-tile [colspan]="1" [rowspan]="4"
-      [style.background]="'lightgreen'">
-      <div *ngIf="url && post && isProcessed!==undefined">
+    <mat-grid-tile
+      [colspan]="1"
+      [rowspan]="4"
+      [style.background]="isProcessed ? '#F6F6F6' : 'lightgreen'"
+      class="form-section"
+    >
+      <div *ngIf="url && post && isProcessed !== undefined">
         <app-form [post]="post" [url]="url" [isProcessed]="isProcessed">
         </app-form>
       </div>
     </mat-grid-tile>
-
   </mat-grid-list>
-
-
-
 </div>

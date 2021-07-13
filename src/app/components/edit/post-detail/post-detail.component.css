@@ -25,3 +25,12 @@
   max-width: 400px;
   background-color: rgb(221, 250, 248);
 }
+
+.pic-section, .text-section, .form-section{
+  margin-top: 1rem;
+  border-radius: 1rem;
+}
+
+.text-extraction-box{
+margin: 2rem;
+}

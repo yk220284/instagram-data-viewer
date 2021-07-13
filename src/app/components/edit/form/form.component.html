@@ -1,14 +1,30 @@
-<form class="example-form" [formGroup]="profileForm" #formDir="ngForm"
-  (ngSubmit)="onSubmit(profileForm, formDir) " class="form-group">
+<form
+  class="example-form"
+  [formGroup]="profileForm"
+  #formDir="ngForm"
+  (ngSubmit)="onSubmit(profileForm, formDir)"
+  class="form-group"
+>
   <!-- username -->
   <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label for="userName">Username</mat-label>
-    <input type="text" placeholder="Pick username" aria-label="Number" matInput
-      [matAutocomplete]="auto" formControlName="userName">
+    <mat-label for="username">Username</mat-label>
+    <input
+      type="text"
+      placeholder="Pick username"
+      aria-label="Number"
+      matInput
+      [matAutocomplete]="auto"
+      formControlName="username"
+      [ngStyle]="{
+        color: fieldChanged('username') ? 'gray' : 'black'
+      }"
+    />
     <mat-autocomplete #auto="matAutocomplete">
-      <mat-option *ngFor="let option of filteredOptions | async"
-        [value]="option">
-        {{option}}
+      <mat-option
+        *ngFor="let option of filteredOptions | async"
+        [value]="option"
+      >
+        {{ option }}
       </mat-option>
     </mat-autocomplete>
   </mat-form-field>
@@ -16,27 +32,46 @@
   <!-- full name -->
   <mat-form-field class="example-full-width" appearance="fill">
     <mat-label>Full Name</mat-label>
-    <input type="text" placeholder="Pick full name" aria-label="Number" matInput
-      [matAutocomplete]="auto" formControlName="fullName">
+    <input
+      type="text"
+      placeholder="Pick full name"
+      aria-label="Number"
+      matInput
+      [matAutocomplete]="auto"
+      formControlName="full_name"
+      [ngStyle]="{
+        color: fieldChanged('full_name') ? 'gray' : 'black'
+      }"
+    />
   </mat-form-field>
 
   <!-- error -->
   <div
-    [class.cross-validation-error]="profileForm.errors?.identityRevealed && (profileForm.touched || profileForm.dirty)">
-    <div *ngIf="validateFormControl('userName')" class="alert alert-danger">
-      <div *ngIf="profileForm.get('userName')!.errors?.required">
+    [class.cross-validation-error]="
+      profileForm.errors?.identityRevealed &&
+      (profileForm.touched || profileForm.dirty)
+    "
+  >
+    <div *ngIf="validateFormControl('username')" class="alert alert-danger">
+      <div *ngIf="profileForm.get('username')!.errors?.required">
         Username is required.
       </div>
-      <div *ngIf="profileForm.get('userName')!.errors?.forbiddenName"
-        class="alert alert-danger">
+      <div
+        *ngIf="profileForm.get('username')!.errors?.forbiddenName"
+        class="alert alert-danger"
+      >
         Space is not allowed.
       </div>
     </div>
   </div>
 
   <div class="example-button-row">
-    <button mat-raised-button color="primary" type="submit"
-      [disabled]="!profileForm.valid">
+    <button
+      mat-raised-button
+      color="primary"
+      type="submit"
+      [disabled]="!profileForm.valid"
+    >
       Submit
     </button>
     <button type="submit" mat-raised-button color="warn">Irrlevant</button>
