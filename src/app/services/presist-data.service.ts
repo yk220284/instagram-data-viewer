@@ -16,7 +16,7 @@ import {
   tap,
   withLatestFrom,
 } from 'rxjs/operators';
-import { Post } from 'src/post';
+import { Post, PostState } from 'src/post';
 import { Profile } from 'src/profile';
 export interface Item {
   shortcode: string;
@@ -69,11 +69,13 @@ export class PresistDataService {
     });
   }
 
-  getNextPost(shortcode: string) {
-    return this.unprocessedPosts.pipe(
+  getNextPost(shortcode: string, postState: PostState) {
+    const postStore =
+      postState === 'processed' ? this.processedPosts : this.unprocessedPosts;
+    return postStore.pipe(
       map((posts) => {
         if (posts.length <= 1) {
-          console.log(`we have ${posts.length - 1} posts unprocessed`);
+          console.log(`we have ${posts.length - 1} posts ${postState}`);
           return null;
         }
         const cur_idx = posts.findIndex((post) => post.shortcode === shortcode);

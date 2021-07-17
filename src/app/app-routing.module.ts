@@ -11,7 +11,7 @@ const routes: Routes = [
   { path: 'processed-posts', component: ProcessedPostTableComponent },
   { path: 'upload', component: UploaderComponent },
   {
-    path: 'detail/:id',
+    path: 'detail/:postState/:id',
     component: PostDetailComponent,
     runGuardsAndResolvers: 'paramsChange',
   },

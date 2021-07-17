@@ -1,8 +1,9 @@
 import { Component, Input, OnInit } from '@angular/core';
-import { Post } from 'src/post';
+import { Post, PostState } from 'src/post';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PresistDataService } from '../../../services/presist-data.service';
-import { Subscription } from 'rxjs';
+import { combineLatest, Observable, Subscription } from 'rxjs';
+import { finalize, take, tap } from 'rxjs/operators';
 
 @Component({
   selector: 'app-post-detail',
@@ -11,7 +12,7 @@ import { Subscription } from 'rxjs';
 })
 export class PostDetailComponent implements OnInit {
   post: Post | undefined;
-  isProcessed: boolean | undefined;
+  postState: PostState | undefined;
   url: string | undefined;
   navigationSubscription: Subscription;
   constructor(
@@ -29,8 +30,33 @@ export class PostDetailComponent implements OnInit {
   initialiseInvites() {
     // Set default values and re-fetch any data you need.
     const shortcode: string = String(this.route.snapshot.paramMap.get('id'));
-    this.getPost(shortcode);
-    this.getImageUrl(shortcode);
+    this.postState = String(
+      this.route.snapshot.paramMap.get('postState')
+    ) as PostState;
+    combineLatest([this.getPost(shortcode), this.getImageUrl(shortcode)])
+      .pipe(
+        take(1),
+        tap(([post, urlJson]) => {
+          if (post) {
+            console.log(post, urlJson);
+
+            this.post = post;
+            this.url = urlJson.url;
+          }
+        })
+      )
+      .subscribe();
+  }
+
+  private getImageUrl(
+    shortcode: string
+  ): Observable<{ url: string; [key: string]: any }> {
+    return this.presistDataService.getImageUrl(shortcode);
+  }
+  private getPost(shortcode: string): Observable<Post | null> {
+    return this.postState === 'unprocessed'
+      ? this.presistDataService.getPostUnprocessed(shortcode)
+      : this.presistDataService.getPostProcessed(shortcode);
   }
 
   ngOnInit(): void {
@@ -44,32 +70,5 @@ export class PostDetailComponent implements OnInit {
     if (this.navigationSubscription) {
       this.navigationSubscription.unsubscribe();
     }
-  }
-
-  getPost(shortcode: string): void {
-    this.presistDataService
-      .getPostUnprocessed(shortcode)
-      .subscribe((post: Post) => {
-        // console.log('unprocessed post', post);
-        if (post !== null) {
-          this.post = post;
-          this.isProcessed = false;
-        }
-      });
-    this.presistDataService
-      .getPostProcessed(shortcode)
-      .subscribe((post: Post) => {
-        if (post !== null) {
-          console.log('processed post', post);
-          this.post = post;
-          this.isProcessed = true;
-        }
-      });
-  }
-
-  getImageUrl(shortcode: string) {
-    this.presistDataService.getImageUrl(shortcode).subscribe((urlJson) => {
-      this.url = urlJson.url;
-    });
   }
 }

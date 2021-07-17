@@ -5,7 +5,6 @@ import { PresistDataService } from '../../../services/presist-data.service';
 @Component({
   selector: 'app-post-table',
   templateUrl: './post-table.component.html',
-  styleUrls: ['./post-table.component.css'],
 })
 export class PostTableComponent implements OnInit {
   dataSource: Post[] = [];

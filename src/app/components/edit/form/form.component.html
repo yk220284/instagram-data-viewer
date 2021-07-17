@@ -71,15 +71,24 @@
         mat-raised-button
         color="primary"
         type="submit"
-        [disabled]="!profileForm.valid"
+        [disabled]="!profileForm.valid || nextRoute === undefined"
       >
         Submit
       </button>
+
       <button type="submit" mat-raised-button color="warn">Irrlevant</button>
+
+      <button
+        type="button"
+        mat-raised-button
+        routerLink="{{ nextRoute }}"
+        [disabled]="!hasNextRoute()"
+      >
+        {{ hasNextRoute() ? "See Next Post" : "No More Post" }}
+      </button>
     </fieldset>
   </div>
 </form>
-<button mat-raised-button routerLink="{{ nextRoute }}">Link</button>
 
 {{ this.nextRoute }}
 <!-- <div *ngFor="let item of items | async">{{item|json}}</div> -->

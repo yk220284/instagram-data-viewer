@@ -12,7 +12,8 @@ import { from, Observable, of } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 import { PresistDataService } from '../../../services/presist-data.service';
 import { Profile } from '../../../../profile';
-import { Post } from 'src/post';
+import { Post, PostState } from 'src/post';
+import { Router } from '@angular/router';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -26,7 +27,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   templateUrl: './form.component.html',
   styleUrls: ['./form.component.css'],
 })
-export class FormComponent implements OnInit, OnChanges {
+export class FormComponent implements OnChanges {
   profileForm = new FormGroup({
     username: new FormControl('', [
       Validators.required,
@@ -36,7 +37,7 @@ export class FormComponent implements OnInit, OnChanges {
   });
   @Input() post!: Post;
   @Input() url!: string;
-  @Input() isProcessed!: boolean;
+  @Input() postState!: PostState;
   profile: Profile | undefined;
   nextRoute: string | undefined;
 
@@ -52,21 +53,29 @@ export class FormComponent implements OnInit, OnChanges {
     }
     return this.options;
   }
+  // Next Post
   getNextRoute() {
     this.presistDataService
-      .getNextPost(this.post.shortcode)
+      .getNextPost(this.post.shortcode, this.postState)
       .subscribe(
         (p) =>
           (this.nextRoute =
-            p === null ? '/processed-posts' : `/detail/${p.shortcode}`)
+            p === null
+              ? '/processed-posts'
+              : `/detail/${this.postState}/${p.shortcode}`)
       );
   }
-  ngOnInit(): void {
-    // Fill in form if processed
-    if (this.isProcessed) {
+  hasNextRoute() {
+    return this.nextRoute !== undefined && this.nextRoute.includes('detail');
+  }
+
+  ngOnChanges() {
+    if (this.postState === 'processed') {
+      console.log('triggered on change', this.post.username);
       this.presistDataService
         .getProfile(this.post.shortcode)
-        .subscribe((profile) => {
+        .subscribe((profile: Profile) => {
+          console.log('getting profile', profile.username);
           this.profile = profile;
           this.profileForm.get('username')?.setValue(profile.username);
           this.profileForm.get('full_name')?.setValue(profile.full_name);
@@ -78,27 +87,17 @@ export class FormComponent implements OnInit, OnChanges {
       startWith(''),
       map((value: string) => this._filter(value))
     );
-    console.log(`is Processed: ${this.isProcessed}`);
   }
 
-  ngOnChanges() {
-    this.getNextRoute();
-  }
-
-  constructor(private presistDataService: PresistDataService) {}
+  constructor(
+    private presistDataService: PresistDataService,
+    private router: Router
+  ) {}
 
   fieldChanged(controlName: 'username' | 'full_name') {
-    if (this.isProcessed && this.profile)
+    if (this.postState === 'processed' && this.profile)
       return (
         this.profileForm.get(controlName)?.value === this.profile[controlName]
-      );
-    return false;
-  }
-
-  fullNameChanged() {
-    if (this.isProcessed)
-      return (
-        this.profileForm.get('full_name')?.value === this.profile?.full_name
       );
     return false;
   }
@@ -109,9 +108,7 @@ export class FormComponent implements OnInit, OnChanges {
   }
 
   handleProfile(profile: Profile) {
-    if (!this.isProcessed) {
-      console.log('adding new profile');
-
+    if (this.postState === 'unprocessed') {
       return this.presistDataService.addProfile(profile).then(() => {
         this.presistDataService.movePostJson(profile.shortcode).subscribe();
       });
@@ -131,6 +128,7 @@ export class FormComponent implements OnInit, OnChanges {
       .then(() => {
         formDir.resetForm();
         this.profileForm.reset();
+        this.router.navigate([this.nextRoute]);
       })
       .catch((e) => {
         console.log('err: ', e);

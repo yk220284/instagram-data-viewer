@@ -1,10 +1,10 @@
-<div *ngIf="post">
+<div *ngIf="post && postState">
   <!-- pic-section -->
   <mat-grid-list cols="2" rowHeight="100px" [gutterSize]="'1rem'">
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="8"
-      [style.background]="isProcessed ? '#F6F6F6' : '#DDBDF1'"
+      [style.background]="postState === 'processed' ? '#F6F6F6' : '#DDBDF1'"
       class="pic-section"
     >
       <mat-card class="example-card">
@@ -31,7 +31,7 @@
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="4"
-      [style.background]="isProcessed ? '#F6F6F6' : 'lightblue'"
+      [style.background]="postState === 'processed' ? '#F6F6F6' : 'lightblue'"
       class="text-section"
     >
       <span class="text-extraction-box">
@@ -48,12 +48,11 @@
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="4"
-      [style.background]="isProcessed ? '#F6F6F6' : 'lightgreen'"
+      [style.background]="postState === 'processed' ? '#F6F6F6' : 'lightgreen'"
       class="form-section"
     >
-      <div *ngIf="url && post && isProcessed !== undefined">
-        <app-form [post]="post" [url]="url" [isProcessed]="isProcessed">
-        </app-form>
+      <div *ngIf="url && post">
+        <app-form [post]="post" [url]="url" [postState]="postState"> </app-form>
       </div>
     </mat-grid-tile>
   </mat-grid-list>
