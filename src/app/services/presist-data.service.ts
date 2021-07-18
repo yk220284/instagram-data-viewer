@@ -114,13 +114,14 @@ export class PresistDataService {
   movePostJson(shortcode: string) {
     return this.getPostUnprocessed(shortcode).pipe(
       map((post: Post) => {
-        console.log('adding post', post);
-        this.postProcessedCollection
-          .doc(shortcode)
-          .set(post)
-          .then(() =>
-            this.postUnprocessedCollection.doc(post.shortcode).delete()
-          );
+        if (post !== null) {
+          this.postProcessedCollection
+            .doc(shortcode)
+            .set(post)
+            .then(() =>
+              this.postUnprocessedCollection.doc(post.shortcode).delete()
+            );
+        }
       })
     );
   }
