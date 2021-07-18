@@ -83,6 +83,8 @@ export class FormComponent implements OnChanges {
         .subscribe((profile: Profile) => {
           console.log('getting profile', profile.username);
           this.profile = profile;
+          this.profileForm.get('isIrrelevant')?.setValue(profile.isIrrelevant);
+          this.toggleIrrelevance();
           this.profileForm.get('username')?.setValue(profile.username);
           this.profileForm.get('full_name')?.setValue(profile.full_name);
         });
@@ -127,7 +129,7 @@ export class FormComponent implements OnChanges {
       });
     }
     // _updateProfile
-    return this.presistDataService.updateProfile(profile);
+    return this.presistDataService.addProfile(profile);
   }
 
   private openSnackBar() {
