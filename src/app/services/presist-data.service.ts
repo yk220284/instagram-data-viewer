@@ -18,10 +18,7 @@ import {
 } from 'rxjs/operators';
 import { Post, PostState } from 'src/post';
 import { Profile } from 'src/profile';
-export interface Item {
-  shortcode: string;
-  name: string;
-}
+
 export interface ImageUrl {
   shortcode: string;
   url: string;
@@ -31,19 +28,19 @@ export interface ImageUrl {
   providedIn: 'root',
 })
 export class PresistDataService {
-  private itemsCollection: AngularFirestoreCollection<Item>;
   private imageUrlCollection: AngularFirestoreCollection<ImageUrl>;
   private postUnprocessedCollection: AngularFirestoreCollection<Post>;
   private postProcessedCollection: AngularFirestoreCollection<Post>;
+  private postIrrelevantCollection: AngularFirestoreCollection<Post>;
   private profileCollection: AngularFirestoreCollection<Profile>;
 
-  private items: Observable<Item[]>;
   unprocessedPosts: Observable<Post[]>;
   processedPosts: Observable<Post[]>;
 
   private imageUrlFolder: string = 'imageUrlNew';
   private postUnprocessedFolder: string = 'postJsonNew';
   private postProcessedFolder: string = 'postJsonProcessedNew';
+  private postIrrelevantFolder: string = 'postJsonIrrelevantNew';
   private imageFolder: string = 'imgNew';
   private profileFolder: string = 'profileNew';
 
@@ -51,7 +48,6 @@ export class PresistDataService {
     private afs: AngularFirestore,
     private imageStorage: AngularFireStorage
   ) {
-    this.itemsCollection = afs.collection<Item>('test');
     this.imageUrlCollection = afs.collection<ImageUrl>(this.imageUrlFolder);
     this.postUnprocessedCollection = afs.collection<Post>(
       this.postUnprocessedFolder
@@ -59,8 +55,10 @@ export class PresistDataService {
     this.postProcessedCollection = afs.collection<Post>(
       this.postProcessedFolder
     );
+    this.postIrrelevantCollection = afs.collection<Post>(
+      this.postIrrelevantFolder
+    );
     this.profileCollection = afs.collection<Profile>(this.profileFolder);
-    this.items = this.itemsCollection.valueChanges({ idField: 'shortcode' });
     this.unprocessedPosts = this.postUnprocessedCollection.valueChanges({
       idField: 'shortcode',
     });
@@ -126,6 +124,21 @@ export class PresistDataService {
     );
   }
 
+  moveProcessedPostJson(shortcode: string) {
+    return this.getPostProcessed(shortcode).pipe(
+      map((post: Post) => {
+        if (post !== null) {
+          this.postIrrelevantCollection
+            .doc(shortcode)
+            .set(post)
+            .then(() =>
+              this.postProcessedCollection.doc(post.shortcode).delete()
+            );
+        }
+      })
+    );
+  }
+
   uploadPostJson(post: Post) {
     return combineLatest([
       this.getPostUnprocessed(post.shortcode),
@@ -164,13 +177,6 @@ export class PresistDataService {
       Object.entries(profile).filter(([_, v]) => !!v)
     );
     return this.profileCollection.doc(profile.shortcode).update(partialProfile);
-  }
-
-  addItem(name: string) {
-    const shortcode = this.afs.createId();
-    const item: Item = { shortcode, name };
-    console.log(item);
-    return this.itemsCollection.doc(shortcode).set(item);
   }
 
   _getDocByShortcode(collection: string, shortcode: string): Observable<any> {
