@@ -60,7 +60,7 @@
       }"
       class="form-section"
     >
-      <div *ngIf="url && post">
+      <div *ngIf="url && post" class="form-wrapper">
         <app-form [post]="post" [url]="url" [postState]="postState"> </app-form>
       </div>
     </mat-grid-tile>

@@ -45,6 +45,13 @@
     />
   </mat-form-field>
 
+  <mat-slide-toggle
+    formControlName="isIrrelevant"
+    color="warn"
+    (change)="toggleIrrelevance()"
+    >Irrelevant</mat-slide-toggle
+  >
+
   <!-- error -->
   <div
     [class.cross-validation-error]="
@@ -64,7 +71,6 @@
       </div>
     </div>
   </div>
-
   <div class="example-button-row">
     <fieldset ng-disabled="url===undefined">
       <button
@@ -75,8 +81,6 @@
       >
         Submit
       </button>
-
-      <button type="submit" mat-raised-button color="warn">Irrlevant</button>
 
       <button
         type="button"

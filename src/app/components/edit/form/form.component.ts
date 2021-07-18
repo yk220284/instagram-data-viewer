@@ -24,7 +24,7 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
 }
 
 // Fields in the form
-const profileField = ['username', 'full_name'] as const;
+const profileField = ['username', 'full_name', 'isIrrelevant'] as const;
 type ProfileField = typeof profileField[number];
 
 @Component({
@@ -39,6 +39,7 @@ export class FormComponent implements OnChanges {
       forbiddenNameValidator(/ /i),
     ]),
     full_name: new FormControl(''),
+    isIrrelevant: new FormControl(false),
   });
   @Input() post!: Post;
   @Input() url!: string;
@@ -140,11 +141,22 @@ export class FormComponent implements OnChanges {
     this._snackBar.open(msg, 'close', { duration: 3000 });
   }
 
+  toggleIrrelevance() {
+    profileField
+      .filter((field) => field !== 'isIrrelevant')
+      .forEach((field) =>
+        this.profileForm.get('isIrrelevant')?.value
+          ? this.profileForm.get(field)?.disable()
+          : this.profileForm.get(field)?.enable()
+      );
+  }
+
   onSubmit(formData: any, formDir: FormGroupDirective) {
     this.openSnackBar();
     const profile: Profile = {
       username: this.profileForm.get('username')!.value,
       full_name: this.profileForm.get('full_name')!.value,
+      isIrrelevant: this.profileForm.get('isIrrelevant')!.value,
       url: this.url,
       shortcode: this.post.shortcode,
     };

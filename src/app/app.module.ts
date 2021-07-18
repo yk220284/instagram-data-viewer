@@ -23,10 +23,10 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 
 // Firebace Module
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireStorageModule, BUCKET } from '@angular/fire/storage';
 import { AngularFireAuthModule } from '@angular/fire/auth';
 
@@ -75,6 +75,7 @@ import { TemplateTableComponent } from './components/display/template-table/temp
     MatGridListModule,
     MatTabsModule,
     MatSnackBarModule,
+    MatSlideToggleModule,
   ],
   providers: [{ provide: BUCKET, useValue: 'instagram-data-label-tool' }],
   bootstrap: [AppComponent],
