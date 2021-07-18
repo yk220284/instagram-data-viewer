@@ -22,6 +22,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatTabsModule } from '@angular/material/tabs';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
 
 // Firebace Module
 import { AngularFireModule } from '@angular/fire';
@@ -73,6 +74,7 @@ import { TemplateTableComponent } from './components/display/template-table/temp
     MatDividerModule,
     MatGridListModule,
     MatTabsModule,
+    MatSnackBarModule,
   ],
   providers: [{ provide: BUCKET, useValue: 'instagram-data-label-tool' }],
   bootstrap: [AppComponent],

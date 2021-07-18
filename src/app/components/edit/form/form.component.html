@@ -16,7 +16,7 @@
       [matAutocomplete]="auto"
       formControlName="username"
       [ngStyle]="{
-        color: fieldChanged('username') ? 'gray' : 'black'
+        color: fieldUnchanged('username') ? 'gray' : 'black'
       }"
     />
     <mat-autocomplete #auto="matAutocomplete">
@@ -40,7 +40,7 @@
       [matAutocomplete]="auto"
       formControlName="full_name"
       [ngStyle]="{
-        color: fieldChanged('full_name') ? 'gray' : 'black'
+        color: fieldUnchanged('full_name') ? 'gray' : 'black'
       }"
     />
   </mat-form-field>

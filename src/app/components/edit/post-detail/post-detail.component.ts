@@ -38,8 +38,6 @@ export class PostDetailComponent implements OnInit {
         take(1),
         tap(([post, urlJson]) => {
           if (post) {
-            console.log(post, urlJson);
-
             this.post = post;
             this.url = urlJson.url;
           }

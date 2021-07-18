@@ -14,6 +14,7 @@ import { PresistDataService } from '../../../services/presist-data.service';
 import { Profile } from '../../../../profile';
 import { Post, PostState } from 'src/post';
 import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   return (control: AbstractControl): ValidationErrors | null => {
@@ -21,6 +22,10 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
     return forbidden ? { forbiddenName: { value: control.value } } : null;
   };
 }
+
+// Fields in the form
+const profileField = ['username', 'full_name'] as const;
+type ProfileField = typeof profileField[number];
 
 @Component({
   selector: 'app-form',
@@ -91,15 +96,22 @@ export class FormComponent implements OnChanges {
 
   constructor(
     private presistDataService: PresistDataService,
-    private router: Router
+    private router: Router,
+    private _snackBar: MatSnackBar
   ) {}
 
-  fieldChanged(controlName: 'username' | 'full_name') {
+  fieldUnchanged(controlName: ProfileField) {
     if (this.postState === 'processed' && this.profile)
       return (
         this.profileForm.get(controlName)?.value === this.profile[controlName]
       );
     return false;
+  }
+
+  formUnchanged() {
+    return profileField.every((controlName) =>
+      this.fieldUnchanged(controlName)
+    );
   }
 
   validateFormControl(formControlName: string) {
@@ -117,7 +129,19 @@ export class FormComponent implements OnChanges {
     return this.presistDataService.updateProfile(profile);
   }
 
+  private openSnackBar() {
+    const info = `username ${this.profileForm.get('username')?.value}`;
+    const msg =
+      this.postState === 'unprocessed'
+        ? `submit ${info}`
+        : this.formUnchanged()
+        ? 'Fields Unchanged'
+        : `updated ${info}`;
+    this._snackBar.open(msg, 'close', { duration: 3000 });
+  }
+
   onSubmit(formData: any, formDir: FormGroupDirective) {
+    this.openSnackBar();
     const profile: Profile = {
       username: this.profileForm.get('username')!.value,
       full_name: this.profileForm.get('full_name')!.value,
