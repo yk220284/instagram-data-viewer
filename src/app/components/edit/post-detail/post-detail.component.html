@@ -4,7 +4,10 @@
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="8"
-      [style.background]="postState === 'processed' ? '#F6F6F6' : '#DDBDF1'"
+      [ngClass]="{
+        unprocessed: postState === 'unprocessed',
+        processed: postState === 'processed'
+      }"
       class="pic-section"
     >
       <mat-card class="example-card">
@@ -31,7 +34,10 @@
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="4"
-      [style.background]="postState === 'processed' ? '#F6F6F6' : 'lightblue'"
+      [ngClass]="{
+        unprocessed: postState === 'unprocessed',
+        processed: postState === 'processed'
+      }"
       class="text-section"
     >
       <span class="text-extraction-box">
@@ -48,7 +54,10 @@
     <mat-grid-tile
       [colspan]="1"
       [rowspan]="4"
-      [style.background]="postState === 'processed' ? '#F6F6F6' : 'lightgreen'"
+      [ngClass]="{
+        unprocessed: postState === 'unprocessed',
+        processed: postState === 'processed'
+      }"
       class="form-section"
     >
       <div *ngIf="url && post">

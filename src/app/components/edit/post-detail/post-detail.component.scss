@@ -3,10 +3,6 @@
   max-height: 800px;
 }
 
-.info-card {
-  background-color: rgb(197, 167, 178);
-}
-
 .guide-text {
   color: rgb(39, 58, 58);
   font-size: 1rem;
@@ -23,7 +19,7 @@
 
 .example-card {
   max-width: 400px;
-  background-color: rgb(221, 250, 248);
+  background-color: var(--color-bg-primary);
 }
 
 .pic-section, .text-section, .form-section{
@@ -31,6 +27,13 @@
   border-radius: 1rem;
 }
 
+.processed{
+background-color: rgba(144, 190, 194, 0.164);
+}
+
+.unprocessed{
+  background-color: rgba(144, 194, 152, 0.164);
+}
 .text-extraction-box{
 margin: 2rem;
 }

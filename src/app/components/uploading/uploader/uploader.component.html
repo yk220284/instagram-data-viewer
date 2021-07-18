@@ -1,16 +1,28 @@
-<div class="dropzone" appDropzone (hovered)="toggleHover($event)"
-  (dropped)="filesPicied($event)" [class.hovering]="isHovering">
+<div
+  class="dropzone"
+  appDropzone
+  (hovered)="toggleHover($event)"
+  (dropped)="filesPicied($event)"
+  [class.hovering]="isHovering"
+>
   <h3>Drop Zone</h3>
   <p>Drag and Drop a .json File or .png Files</p>
 </div>
 
-<input #folderInput hidden="true" type="file" onclick="this.value=null"
-  (change)="filesPicied(folderInput.files)" webkitDirectory />
+<input
+  #folderInput
+  hidden="true"
+  type="file"
+  onclick="this.value=null"
+  (change)="filesPicied(folderInput.files)"
+  webkitDirectory
+/>
 <button mat-flat-button color="primary" (click)="folderInput.click()">
-  Choose Image Folder</button>
+  Choose Image Folder
+</button>
 
 <div *ngIf="files.length">
-  <div>Uploaded {{uploadedCnt}} / {{files.length}} files</div>
+  <div>Uploaded {{ uploadedCnt }} / {{ files.length }} files</div>
   <cdk-virtual-scroll-viewport itemSize="50" class="upload-files-viewport">
     <div *ngFor="let file of files.reverse()">
       <app-upload-task [file]="file" (uploaded)="countUploaded()">

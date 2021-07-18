@@ -1,5 +1,38 @@
 /* You can add global styles to this file, and also import other style files */
-@import "~@angular/material/prebuilt-themes/indigo-pink.css";
+@import '~@angular/material/theming';
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat-core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$app-primary: mat-palette($mat-blue);
+$app-accent:  mat-palette($mat-orange);
+$app-warn:    mat-palette($mat-red);
+$app-success: mat-palette($mat-light-green);
+
+// Create the theme object (a Sass map containing all of the palettes).
+$app-theme: mat-light-theme($app-primary, $app-accent, $app-warn);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include angular-material-theme($app-theme);
+
+$primary: map-get($app-theme, primary);
+$accent: map-get($app-theme, accent);
+$warn: map-get($app-theme, warn);
+
+:root {
+  --color-primary: #{mat-color($app-primary)};
+  --color-accent: #{mat-color($app-accent)};
+  --color-warn: #{mat-color($app-warn)};
+  --color-success: #{mat-color($app-success)};
+  --color-bg-primary: #e8e8e8;
+  --color-bg-accent: #3d3d3d;
+}
 
 html,
 body {
@@ -53,50 +86,21 @@ a {
   cursor: pointer;
 }
 
-button {
-  background-color: #eee;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  color: black;
-  font-size: 1.2rem;
-  padding: 1rem;
-  margin-right: 1rem;
-  margin-bottom: 1rem;
-  margin-top: 1rem;
-}
-
-button:hover {
-  background-color: black;
-  color: white;
-}
-
-button:disabled {
-  background-color: #eee;
-  color: #aaa;
-  cursor: auto;
-}
-
-/* Navigation link styles */
+// /* Navigation link styles */
 nav a {
   padding: 5px 10px;
   text-decoration: none;
   margin-right: 10px;
   margin-top: 10px;
   display: inline-block;
-  background-color: #e8e8e8;
-  color: #3d3d3d;
+  background-color: var(--color-bg-primary);
+  color: var(--color-accent);
   border-radius: 4px;
 }
 
 nav a:hover {
   color: white;
   background-color: #42545C;
-}
-
-nav a.active {
-  background-color: black;
-  color: white;
 }
 
 hr {
