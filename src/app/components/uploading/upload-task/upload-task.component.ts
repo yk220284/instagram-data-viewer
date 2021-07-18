@@ -8,7 +8,7 @@ import { PresistDataService } from '../../../services/presist-data.service';
 @Component({
   selector: 'app-upload-task',
   templateUrl: './upload-task.component.html',
-  styleUrls: ['./upload-task.component.css'],
+  styleUrls: ['./upload-task.component.scss'],
 })
 export class UploadTaskComponent implements OnInit {
   @Input() file!: File;

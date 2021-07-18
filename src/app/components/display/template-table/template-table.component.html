@@ -1,3 +1,19 @@
+<div *ngIf="dataSource.length === 0" class="no-unprocessed-div">
+  <h2>
+    No {{ postState === "unprocessed" ? "Unprocessed" : "Processed" }} Posts
+  </h2>
+  <ng-container *ngIf="postState === 'unprocessed'; else proccessed">
+    See processed posts
+    <a class="tab-nav" [routerLink]="'/processed-posts'">here</a>
+  </ng-container>
+  <ng-template #proccessed>
+    See unprocessed posts
+    <a class="tab-nav" [routerLink]="'/posts'">here</a>
+  </ng-template>
+  or
+  <a class="tab-nav" [routerLink]="'/upload'">upload more</a>
+</div>
+
 <div *ngIf="dataSource.length">
   <table
     mat-table
