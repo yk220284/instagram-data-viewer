@@ -3,7 +3,8 @@ import { Post, PostState } from 'src/post';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { PresistDataService } from '../../../services/presist-data.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
-import { finalize, take, tap } from 'rxjs/operators';
+import { finalize, map, take, tap } from 'rxjs/operators';
+import { Profile } from 'src/profile';
 
 @Component({
   selector: 'app-post-detail',

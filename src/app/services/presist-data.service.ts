@@ -30,15 +30,16 @@ export interface ImageUrl {
 export class PresistDataService {
   private imageUrlCollection: AngularFirestoreCollection<ImageUrl>;
   private postUnprocessedCollection: AngularFirestoreCollection<Post>;
-  private postProcessedCollection: AngularFirestoreCollection<Post>;
+  // private postProcessedCollection: AngularFirestoreCollection<Post>;
   private profileCollection: AngularFirestoreCollection<Profile>;
 
   unprocessedPosts: Observable<Post[]>;
-  processedPosts: Observable<Post[]>;
+  profiles: Observable<Profile[]>;
+  // processedPosts: Observable<Post[]>;
 
   private imageUrlFolder: string = 'imageUrlNew';
   private postUnprocessedFolder: string = 'postJsonNew';
-  private postProcessedFolder: string = 'postJsonProcessedNew';
+  // private postProcessedFolder: string = 'postJsonProcessedNew';
   private imageFolder: string = 'imgNew';
   private profileFolder: string = 'profileNew';
 
@@ -50,21 +51,26 @@ export class PresistDataService {
     this.postUnprocessedCollection = afs.collection<Post>(
       this.postUnprocessedFolder
     );
-    this.postProcessedCollection = afs.collection<Post>(
-      this.postProcessedFolder
-    );
+    // this.postProcessedCollection = afs.collection<Post>(
+    //   this.postProcessedFolder
+    // );
     this.profileCollection = afs.collection<Profile>(this.profileFolder);
     this.unprocessedPosts = this.postUnprocessedCollection.valueChanges({
       idField: 'shortcode',
     });
-    this.processedPosts = this.postProcessedCollection.valueChanges({
+    this.profiles = this.profileCollection.valueChanges({
       idField: 'shortcode',
     });
+    // this.processedPosts = this.postProcessedCollection.valueChanges({
+    //   idField: 'shortcode',
+    // });
   }
 
   getNextPost(shortcode: string, postState: PostState) {
     const postStore =
-      postState === 'processed' ? this.processedPosts : this.unprocessedPosts;
+      postState === 'processed'
+        ? this.profiles.pipe(map((profiles) => profiles.map((p) => p.post)))
+        : this.unprocessedPosts;
     return postStore.pipe(
       map((posts) => {
         if (posts.length <= 1) {
@@ -104,19 +110,8 @@ export class PresistDataService {
     return task;
   }
 
-  movePostJson(shortcode: string) {
-    return this.getPostUnprocessed(shortcode).pipe(
-      map((post: Post) => {
-        if (post !== null) {
-          this.postProcessedCollection
-            .doc(shortcode)
-            .set(post)
-            .then(() =>
-              this.postUnprocessedCollection.doc(post.shortcode).delete()
-            );
-        }
-      })
-    );
+  deleteUnprocessedPost(shortcode: string) {
+    return this.postUnprocessedCollection.doc(shortcode).delete();
   }
 
   uploadPostJson(post: Post) {
@@ -148,10 +143,6 @@ export class PresistDataService {
     return this.profileCollection.doc(profile.shortcode).set(profile);
   }
 
-  getProfile(shortcode: string) {
-    return this._getDocByShortcode(this.profileFolder, shortcode);
-  }
-
   updateProfile(profile: Profile) {
     let partialProfile = Object.fromEntries(
       Object.entries(profile).filter(([_, v]) => !!v)
@@ -176,12 +167,17 @@ export class PresistDataService {
         })
       );
   }
+  getProfile(shortcode: string) {
+    return this._getDocByShortcode(this.profileFolder, shortcode);
+  }
 
   getPostUnprocessed(shortcode: string): Observable<any> {
     return this._getDocByShortcode(this.postUnprocessedFolder, shortcode);
   }
   getPostProcessed(shortcode: string): Observable<any> {
-    return this._getDocByShortcode(this.postProcessedFolder, shortcode);
+    return this._getDocByShortcode(this.profileFolder, shortcode).pipe(
+      map((p: Profile) => (p === null ? null : p.post))
+    );
   }
 
   getImageUrl(shortcode: string): Observable<any> {

@@ -131,7 +131,7 @@ export class FormComponent implements OnChanges {
   handleProfile(profile: Profile) {
     if (this.postState === 'unprocessed') {
       return this.presistDataService.addProfile(profile).then(() => {
-        this.presistDataService.movePostJson(profile.shortcode).subscribe();
+        this.presistDataService.deleteUnprocessedPost(profile.shortcode);
       });
     }
     // _updateProfile
@@ -167,6 +167,8 @@ export class FormComponent implements OnChanges {
       isIrrelevant: this.profileForm.get('isIrrelevant')!.value,
       url: this.url,
       shortcode: this.post.shortcode,
+      post: this.post,
+      postState: this.postState,
     };
     this.handleProfile(profile)
       .then(() => {
