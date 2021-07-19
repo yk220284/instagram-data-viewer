@@ -31,7 +31,6 @@ export class PresistDataService {
   private imageUrlCollection: AngularFirestoreCollection<ImageUrl>;
   private postUnprocessedCollection: AngularFirestoreCollection<Post>;
   private postProcessedCollection: AngularFirestoreCollection<Post>;
-  private postIrrelevantCollection: AngularFirestoreCollection<Post>;
   private profileCollection: AngularFirestoreCollection<Profile>;
 
   unprocessedPosts: Observable<Post[]>;
@@ -40,7 +39,6 @@ export class PresistDataService {
   private imageUrlFolder: string = 'imageUrlNew';
   private postUnprocessedFolder: string = 'postJsonNew';
   private postProcessedFolder: string = 'postJsonProcessedNew';
-  private postIrrelevantFolder: string = 'postJsonIrrelevantNew';
   private imageFolder: string = 'imgNew';
   private profileFolder: string = 'profileNew';
 
@@ -54,9 +52,6 @@ export class PresistDataService {
     );
     this.postProcessedCollection = afs.collection<Post>(
       this.postProcessedFolder
-    );
-    this.postIrrelevantCollection = afs.collection<Post>(
-      this.postIrrelevantFolder
     );
     this.profileCollection = afs.collection<Profile>(this.profileFolder);
     this.unprocessedPosts = this.postUnprocessedCollection.valueChanges({
@@ -118,21 +113,6 @@ export class PresistDataService {
             .set(post)
             .then(() =>
               this.postUnprocessedCollection.doc(post.shortcode).delete()
-            );
-        }
-      })
-    );
-  }
-
-  moveProcessedPostJson(shortcode: string) {
-    return this.getPostProcessed(shortcode).pipe(
-      map((post: Post) => {
-        if (post !== null) {
-          this.postIrrelevantCollection
-            .doc(shortcode)
-            .set(post)
-            .then(() =>
-              this.postProcessedCollection.doc(post.shortcode).delete()
             );
         }
       })
