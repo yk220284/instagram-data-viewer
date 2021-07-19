@@ -9,7 +9,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { from, Observable, of } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
+import { map, startWith, take, tap } from 'rxjs/operators';
 import { PresistDataService } from '../../../services/presist-data.service';
 import { Profile } from '../../../../profile';
 import { Post, PostState } from 'src/post';
@@ -80,14 +80,20 @@ export class FormComponent implements OnChanges {
       console.log('triggered on change', this.post.username);
       this.presistDataService
         .getProfile(this.post.shortcode)
-        .subscribe((profile: Profile) => {
-          console.log('getting profile', profile.username);
-          this.profile = profile;
-          this.profileForm.get('isIrrelevant')?.setValue(profile.isIrrelevant);
-          this.toggleIrrelevance();
-          this.profileForm.get('username')?.setValue(profile.username);
-          this.profileForm.get('full_name')?.setValue(profile.full_name);
-        });
+        .pipe(
+          take(1),
+          tap((profile: Profile) => {
+            console.log('getting profile', profile.username);
+            this.profile = profile;
+            this.profileForm
+              .get('isIrrelevant')
+              ?.setValue(profile.isIrrelevant);
+            this.toggleIrrelevance();
+            this.profileForm.get('username')?.setValue(profile.username);
+            this.profileForm.get('full_name')?.setValue(profile.full_name);
+          })
+        )
+        .subscribe();
     }
     this.getNextRoute();
     // Autocomplete form
