@@ -94,6 +94,9 @@ export class FormComponent implements OnChanges {
           })
         )
         .subscribe();
+    } else {
+      // Reset field enablity when a post is unprocessed
+      this.toggleIrrelevance();
     }
     this.getNextRoute();
     // Autocomplete form
