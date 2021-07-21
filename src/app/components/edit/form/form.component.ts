@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, OnInit } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import {
   AbstractControl,
   FormControl,
@@ -8,7 +8,7 @@ import {
   ValidatorFn,
   Validators,
 } from '@angular/forms';
-import { from, Observable, of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { map, startWith, take, tap } from 'rxjs/operators';
 import { PresistDataService } from '../../../services/presist-data.service';
 import { Profile } from '../../../../profile';
@@ -50,6 +50,7 @@ export class FormComponent implements OnChanges {
   // Autocomplet Form
   options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]> = of([]);
+
   private _filter(value: string): string[] {
     if (!!value) {
       const filterValue = value.toLowerCase();
@@ -59,6 +60,7 @@ export class FormComponent implements OnChanges {
     }
     return this.options;
   }
+
   // Next Post
   getNextRoute() {
     this.presistDataService
@@ -71,6 +73,7 @@ export class FormComponent implements OnChanges {
               : `/detail/${this.postState}/${p.shortcode}`)
       );
   }
+
   hasNextRoute() {
     return this.nextRoute !== undefined && this.nextRoute.includes('detail');
   }
@@ -98,6 +101,7 @@ export class FormComponent implements OnChanges {
       // Reset field enablity when a post is unprocessed
       this.toggleIrrelevance();
     }
+
     this.getNextRoute();
     // Autocomplete form
     this.filteredOptions = this.profileForm.get('username')!.valueChanges.pipe(

@@ -1,9 +1,8 @@
 <form
-  class="example-form"
+  class="form-group"
   [formGroup]="profileForm"
   #formDir="ngForm"
   (ngSubmit)="onSubmit(profileForm, formDir)"
-  class="form-group"
 >
   <!-- username -->
   <mat-form-field class="example-full-width" appearance="fill">
@@ -51,7 +50,7 @@
     color="warn"
     (change)="toggleIrrelevance()"
     style="margin-left: 1rem"
-    >Irrelevant
+  >Irrelevant
   </mat-slide-toggle>
 
   <!-- error -->
@@ -89,6 +88,7 @@
         mat-raised-button
         routerLink="{{ nextRoute }}"
         [disabled]="!hasNextRoute()"
+        (click)="formDir.resetForm()"
       >
         {{ hasNextRoute() ? "See Next Post" : "No More Post" }}
       </button>
@@ -97,4 +97,3 @@
 </form>
 
 {{ this.nextRoute }}
-<!-- <div *ngFor="let item of items | async">{{item|json}}</div> -->

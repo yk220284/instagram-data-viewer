@@ -4,7 +4,7 @@ import {
   AngularFirestoreCollection,
 } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
-import { combineLatest, forkJoin, from, Observable, of, zip } from 'rxjs';
+import { combineLatest, from, Observable, of } from 'rxjs';
 import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Post, PostState } from 'src/post';
 import { Profile } from 'src/profile';
@@ -58,6 +58,7 @@ export class PresistDataService {
     const imageUrl: ImageUrl = { shortcode: shortcode, url: url };
     return this.imageUrlCollection.doc(shortcode).set(imageUrl);
   }
+
   uploadImage(imageFile: File) {
     // The storage path
     const fileNameNoExt: string = imageFile.name
@@ -80,6 +81,7 @@ export class PresistDataService {
       .subscribe();
     return task;
   }
+
   uploadPostJson(post: Post) {
     return combineLatest([
       this.getPostUnprocessed(post.shortcode),
@@ -151,6 +153,7 @@ export class PresistDataService {
   deleteUnprocessedPost(shortcode: string) {
     return this.postUnprocessedCollection.doc(shortcode).delete();
   }
+
   getPostUnprocessed(shortcode: string): Observable<any> {
     return this._getDocByShortcode(this.postUnprocessedFolder, shortcode);
   }
