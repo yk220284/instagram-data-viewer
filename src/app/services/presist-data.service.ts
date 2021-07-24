@@ -9,9 +9,12 @@ import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Post, PostState } from 'src/post';
 import { Profile } from 'src/profile';
 
+export type ImgType = 'post' | 'profile';
+
 export interface ImageUrl {
   shortcode: string;
-  url: string;
+  post?: string;
+  profile?: string;
 }
 
 @Injectable({
@@ -19,9 +22,9 @@ export interface ImageUrl {
 })
 export class PresistDataService {
   // Image Blob
-  private imageFolder: string = 'imgNew';
+  private imageFolder: string = 'ImgProfileAndPost';
   // Image URL
-  private imageUrlFolder: string = 'imageUrlNew';
+  private imageUrlFolder: string = 'ImgUrlProfileAndPost';
   private imageUrlCollection: AngularFirestoreCollection<ImageUrl>;
 
   // Profile
@@ -54,9 +57,18 @@ export class PresistDataService {
   }
 
   /* Uploader */
-  private addImageUrl(shortcode: string, url: string) {
-    const imageUrl: ImageUrl = { shortcode: shortcode, url: url };
-    return this.imageUrlCollection.doc(shortcode).set(imageUrl);
+  private addImageUrl(imageFileName: string, url: string) {
+    const splitIdx = imageFileName.lastIndexOf('_');
+    const shortcode = imageFileName.substr(0, splitIdx);
+    const imgType = imageFileName.substr(splitIdx + 1) as ImgType;
+    console.log(`add image! ${imgType} ${shortcode}`);
+    return this.imageUrlCollection.doc(shortcode).set(
+      {
+        shortcode: shortcode,
+        [imgType]: url,
+      },
+      { merge: true }
+    );
   }
 
   uploadImage(imageFile: File) {
