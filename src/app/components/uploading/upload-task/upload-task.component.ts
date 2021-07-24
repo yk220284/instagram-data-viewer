@@ -2,7 +2,7 @@ import { Output, EventEmitter } from '@angular/core';
 import { Component, Input, OnInit } from '@angular/core';
 import { forkJoin, Observable, of, zip } from 'rxjs';
 import { finalize, first, tap } from 'rxjs/operators';
-import { Post } from 'src/post';
+import { Post, PostCreater } from 'src/post';
 import { PresistDataService } from '../../../services/presist-data.service';
 
 @Component({
@@ -33,13 +33,7 @@ export class UploadTaskComponent implements OnInit {
         let completePostCnt = 0;
         const tasks: Observable<any>[] = [];
         for (const postSource of posts) {
-          const post: Post = {
-            display_url: postSource.display_url,
-            full_name: postSource.full_name,
-            shortcode: postSource.shortcode,
-            upload_date: postSource.upload_date,
-            username: postSource.username,
-          };
+          const post = new PostCreater(postSource).build();
           tasks.push(
             this.presistDataService
               .uploadPostJson(post)

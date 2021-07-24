@@ -34,7 +34,7 @@ export class PresistDataService {
 
   // Posts
   unprocessedPosts: Observable<Post[]>;
-  private postUnprocessedFolder: string = 'postJsonNew';
+  private postUnprocessedFolder: string = 'profileAndPostJson';
   private postUnprocessedCollection: AngularFirestoreCollection<Post>;
 
   constructor(

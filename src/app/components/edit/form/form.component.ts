@@ -80,7 +80,7 @@ export class FormComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.postState === 'processed') {
-      console.log('triggered on change', this.post.username);
+      console.log('triggered on change', this.post.postProfile.username);
       this.presistDataService
         .getProfile(this.post.shortcode)
         .pipe(
