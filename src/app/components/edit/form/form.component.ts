@@ -48,17 +48,16 @@ export class FormComponent implements OnChanges {
   nextRoute: string | undefined;
 
   // Autocomplet Form
-  options: string[] = ['One', 'Two', 'Three'];
+  // options: string[] = ['One', 'Two', 'Three'];
   filteredOptions: Observable<string[]> = of([]);
-
   private _filter(value: string): string[] {
     if (!!value) {
       const filterValue = value.toLowerCase();
-      return this.options.filter((option) =>
+      return this.post.fake_names.filter((option) =>
         option.toLowerCase().includes(filterValue)
       );
     }
-    return this.options;
+    return this.post.fake_names;
   }
 
   // Next Post

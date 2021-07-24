@@ -11,20 +11,25 @@
       class="pic-section"
     >
       <mat-card class="example-card">
-        <img mat-card-image class="postImg" [src]="url" alt="no image" />
         <mat-card-header>
+          <div mat-card-avatar [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}">
+          </div>
           <mat-card-title>{{ post.postProfile.username }}</mat-card-title>
           <mat-card-subtitle>
             {{ post.postProfile.full_name }}
           </mat-card-subtitle>
         </mat-card-header>
+        <img mat-card-image class="postImg" [src]="url" alt="no image"/>
         <mat-card-content>
           <span class="guide-text">{{ post.upload_date }}</span>
           <p>
-            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptatem
-            quasi numquam a assumenda culpa unde deserunt impedit cupiditate
-            facere minus! Voluptatum cumque doloribus adipisci nulla totam
-            expedita id eveniet mollitia?
+            {{post.tagged_users|json}}
+          </p>
+          <p>
+            {{post.hashtags|json}}
+          </p>
+          <p>
+            {{post.caption}}
           </p>
         </mat-card-content>
       </mat-card>
@@ -41,12 +46,8 @@
       class="text-section"
     >
       <span class="text-extraction-box">
-        <p>
-          <span class="guide-text">Text extracted</span> Lorem, ipsum dolor sit
-          amet consectetur adipisicing elit. Consectetur fugit velit beatae vel
-          quia porro dolores repellat corrupti, rem saepe voluptatum accusamus
-          optio laudantium accusantium necessitatibus veritatis itaque! Placeat,
-          nesciunt.
+        <p style="white-space: pre">
+         {{post.extracted_text}}
         </p>
       </span>
     </mat-grid-tile>
@@ -61,7 +62,7 @@
       class="form-section"
     >
       <div *ngIf="url && post" class="form-wrapper">
-        <app-form [post]="post" [url]="url" [postState]="postState"> </app-form>
+        <app-form [post]="post" [url]="url" [postState]="postState"></app-form>
       </div>
     </mat-grid-tile>
   </mat-grid-list>

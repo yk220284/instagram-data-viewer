@@ -29,7 +29,7 @@ export class PresistDataService {
 
   // Profile
   profiles: Observable<Profile[]>;
-  private profileFolder: string = 'profileNew';
+  private profileFolder: string = 'profileLatest';
   private profileCollection: AngularFirestoreCollection<Profile>;
 
   // Posts
@@ -171,7 +171,7 @@ export class PresistDataService {
   }
 
   /* Image URL */
-  getImageUrl(shortcode: string): Observable<any> {
+  getImageUrl(shortcode: string): Observable<ImageUrl> {
     return this._getDocByShortcode(this.imageUrlFolder, shortcode);
   }
 

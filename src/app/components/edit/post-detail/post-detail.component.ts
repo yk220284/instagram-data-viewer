@@ -1,7 +1,11 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { Post, PostState } from 'src/post';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
-import { PresistDataService } from '../../../services/presist-data.service';
+import {
+  ImageUrl,
+  ImgType,
+  PresistDataService,
+} from '../../../services/presist-data.service';
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { finalize, map, take, tap } from 'rxjs/operators';
 import { Profile } from 'src/profile';
@@ -15,6 +19,7 @@ export class PostDetailComponent implements OnInit {
   post: Post | undefined;
   postState: PostState | undefined;
   url: string | undefined;
+  profile_pic_url: string | undefined;
   navigationSubscription: Subscription;
   constructor(
     private route: ActivatedRoute,
@@ -40,16 +45,15 @@ export class PostDetailComponent implements OnInit {
         tap(([post, urlJson]) => {
           if (post) {
             this.post = post;
-            this.url = urlJson.url;
+            this.url = urlJson.post;
+            this.profile_pic_url = urlJson.profile;
           }
         })
       )
       .subscribe();
   }
 
-  private getImageUrl(
-    shortcode: string
-  ): Observable<{ url: string; [key: string]: any }> {
+  private getImageUrl(shortcode: string): Observable<ImageUrl> {
     return this.presistDataService.getImageUrl(shortcode);
   }
   private getPost(shortcode: string): Observable<Post | null> {

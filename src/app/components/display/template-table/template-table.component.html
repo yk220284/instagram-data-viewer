@@ -24,7 +24,7 @@
   >
     <ng-container matColumnDef="username">
       <th mat-header-cell *matHeaderCellDef>username</th>
-      <td mat-cell *matCellDef="let element">{{ element.username }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.postProfile.username }}</td>
     </ng-container>
 
     <ng-container matColumnDef="display_url">
@@ -42,7 +42,7 @@
 
     <ng-container matColumnDef="full_name">
       <th mat-header-cell *matHeaderCellDef>full name</th>
-      <td mat-cell *matCellDef="let element">{{ element.full_name }}</td>
+      <td mat-cell *matCellDef="let element">{{ element.postProfile.full_name }}</td>
     </ng-container>
 
     <ng-container matColumnDef="shortcode">
