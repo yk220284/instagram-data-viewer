@@ -9,8 +9,8 @@
 // (imported above). For each palette, you can optionally specify a default, lighter, and darker
 // hue. Available color palettes: https://material.io/design/color/
 $app-primary: mat-palette($mat-blue);
-$app-accent:  mat-palette($mat-orange);
-$app-warn:    mat-palette($mat-red);
+$app-accent: mat-palette($mat-orange);
+$app-warn: mat-palette($mat-red);
 $app-success: mat-palette($mat-light-green);
 
 // Create the theme object (a Sass map containing all of the palettes).
@@ -66,7 +66,7 @@ h3 {
 
 body {
   padding: .5rem;
-  max-width: 1000px;
+  max-width: 1500px;
   margin: auto;
 }
 

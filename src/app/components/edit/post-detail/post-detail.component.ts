@@ -9,6 +9,22 @@ import {
 import { combineLatest, Observable, Subscription } from 'rxjs';
 import { finalize, map, take, tap } from 'rxjs/operators';
 import { Profile } from 'src/profile';
+import { match } from 'fuzzy';
+
+interface WordStyle {
+  words: string[];
+  cssCls: string;
+}
+
+function formatExtractedText(wordStyles: WordStyle[], textToFormat: string) {
+  return wordStyles.reduce((textToFormat, wordStyle) => {
+    const regStr = `(?:|^)(${wordStyle.words.join('|')})(?=[\\s]|$)`;
+    return textToFormat.replace(
+      new RegExp(regStr, 'gi'),
+      (match) => `<span class=${wordStyle.cssCls}>${match}</span>`
+    );
+  }, textToFormat);
+}
 
 @Component({
   selector: 'app-post-detail',
@@ -21,6 +37,8 @@ export class PostDetailComponent implements OnInit {
   url: string | undefined;
   profile_pic_url: string | undefined;
   navigationSubscription: Subscription;
+  formattedExtractedText: string = `<span class="highlight-search-text"> abc </span>`;
+
   constructor(
     private route: ActivatedRoute,
     private router: Router,
@@ -33,6 +51,7 @@ export class PostDetailComponent implements OnInit {
       }
     });
   }
+
   initialiseInvites() {
     // Set default values and re-fetch any data you need.
     const shortcode: string = String(this.route.snapshot.paramMap.get('id'));
@@ -45,6 +64,16 @@ export class PostDetailComponent implements OnInit {
         tap(([post, urlJson]) => {
           if (post) {
             this.post = post;
+            this.formattedExtractedText = formatExtractedText(
+              [
+                { words: post.fake_names, cssCls: 'highlight-search-text' },
+                {
+                  words: [post.postProfile.full_name],
+                  cssCls: 'highlight-search-text',
+                },
+              ],
+              post.extracted_text
+            );
             this.url = urlJson.post;
             this.profile_pic_url = urlJson.profile;
           }
@@ -56,6 +85,7 @@ export class PostDetailComponent implements OnInit {
   private getImageUrl(shortcode: string): Observable<ImageUrl> {
     return this.presistDataService.getImageUrl(shortcode);
   }
+
   private getPost(shortcode: string): Observable<Post | null> {
     return this.postState === 'unprocessed'
       ? this.presistDataService.getPostUnprocessed(shortcode)

@@ -4,41 +4,63 @@
 }
 
 .guide-text {
-  color: rgb(39, 58, 58);
-  font-size: 1rem;
-  font-weight: 200;
-  line-height: 1.5;
-  margin-top: 2.3rem;
+  h4 {
+    color: gray;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid gray;
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+  }
+  h4 span{
+    background: var(--color-bg-primary);
+    padding: 0 10px;
+  }
 }
 
-.info-text {
-  font-size: 1.5.5.5.5.5rem;
-  font-weight: 400;
-  line-height: 2.5;
+::ng-deep .highlight-search-text {
+  background: yellow;
+  font-weight: 600;
 }
 
 .example-card {
   max-width: 400px;
   background-color: var(--color-bg-primary);
+  margin: auto;
 }
 
-.form-wrapper{
+.form-wrapper {
   margin: auto;
   width: 80%;
 }
 
-.pic-section, .text-section, .form-section{
+.pic-section, .text-section, .form-section {
   margin-top: 1rem;
   border-radius: 1rem;
 }
 
-.processed{
-background-color: rgba(144, 190, 194, 0.164);
+.processed {
+  background-color: rgba(144, 190, 194, 0.164);
 }
 
-.unprocessed{
+.unprocessed {
   background-color: rgba(144, 194, 152, 0.164);
 }
-.text-extraction-box{
-margin: 2rem;
+
+.extracted-text-wrapper {
+  .app-toolbar {
+    width: 100%;
+    position: sticky;
+    position: -webkit-sticky; /* For macOS/iOS Safari */
+    top: 0; /* Sets the sticky toolbar to be on top */
+    z-index: 1000; /* Ensure that your app's content doesn't overlap the toolbar */
+  }
+
+  p {
+    margin-top: 1rem;
+    margin-left: 2rem;
+  }
+
+  margin-bottom: auto;
+  width: 100%;
 }

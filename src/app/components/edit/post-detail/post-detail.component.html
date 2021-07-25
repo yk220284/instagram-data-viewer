@@ -1,60 +1,70 @@
 <div *ngIf="post && postState">
   <!-- pic-section -->
-  <mat-grid-list cols="2" rowHeight="100px" [gutterSize]="'1rem'">
+  <mat-grid-list cols="8" rowHeight="100px" [gutterSize]="'1rem'">
     <mat-grid-tile
-      [colspan]="1"
+      [colspan]="3"
       [rowspan]="8"
       [ngClass]="{
         unprocessed: postState === 'unprocessed',
         processed: postState === 'processed'
       }"
       class="pic-section"
+      style="overflow: auto"
     >
-      <mat-card class="example-card">
-        <mat-card-header>
-          <div mat-card-avatar [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}">
-          </div>
-          <mat-card-title>{{ post.postProfile.username }}</mat-card-title>
-          <mat-card-subtitle>
-            {{ post.postProfile.full_name }}
-          </mat-card-subtitle>
-        </mat-card-header>
-        <img mat-card-image class="postImg" [src]="url" alt="no image"/>
-        <mat-card-content>
-          <span class="guide-text">{{ post.upload_date }}</span>
-          <p>
-            {{post.tagged_users|json}}
-          </p>
-          <p>
-            {{post.hashtags|json}}
-          </p>
-          <p>
-            {{post.caption}}
-          </p>
-        </mat-card-content>
-      </mat-card>
+      <div class="extracted-text-wrapper">
+        <mat-toolbar class="app-toolbar" color="primary"
+                     [ngClass]="{'mat-elevation-z5' : true }"><h4>Extracted Text</h4></mat-toolbar>
+        <mat-card class="example-card" style="margin-bottom: auto">
+          <mat-card-header>
+            <div mat-card-avatar [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}">
+            </div>
+            <mat-card-title>{{ post.postProfile.username }}</mat-card-title>
+            <mat-card-subtitle>
+              {{ post.postProfile.full_name }}
+            </mat-card-subtitle>
+          </mat-card-header>
+          <img mat-card-image class="postImg" [src]="url" alt="no image"/>
+          <mat-card-content>
+            <div class="guide-text">
+              <h4><span>{{ post.upload_date }}</span></h4>
+            </div>
+            <p>
+              {{post.caption}}
+            </p>
+          </mat-card-content>
+        </mat-card>
+      </div>
     </mat-grid-tile>
 
     <!-- text-section -->
     <mat-grid-tile
-      [colspan]="1"
-      [rowspan]="4"
+      [colspan]="2"
+      [rowspan]="8"
       [ngClass]="{
         unprocessed: postState === 'unprocessed',
         processed: postState === 'processed'
       }"
       class="text-section"
+      style="overflow: auto"
     >
-      <span class="text-extraction-box">
-        <p style="white-space: pre">
-         {{post.extracted_text}}
+      <div class="extracted-text-wrapper">
+        <mat-toolbar class="app-toolbar" color="primary"
+                     [ngClass]="{'mat-elevation-z5' : true }"><h4>Extracted Text</h4></mat-toolbar>
+        <p style="white-space: pre" [innerHTML]="formattedExtractedText"></p>
+        <mat-divider style="width: 80%; margin: auto"></mat-divider>
+        <p>
+          {{post.tagged_users|json}}
         </p>
-      </span>
+        <p>
+          {{post.hashtags|json}}
+        </p>
+      </div>
+
     </mat-grid-tile>
 
     <mat-grid-tile
-      [colspan]="1"
-      [rowspan]="4"
+      [colspan]="3"
+      [rowspan]="8"
       [ngClass]="{
         unprocessed: postState === 'unprocessed',
         processed: postState === 'processed'
