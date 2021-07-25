@@ -23,8 +23,24 @@ export function forbiddenNameValidator(nameRe: RegExp): ValidatorFn {
   };
 }
 
+const PLATFORMS = [
+  { value: 'instagram', viewValue: 'Instagram' },
+  { value: 'facebook', viewValue: 'Facebook' },
+  { value: 'tiktok', viewValue: 'TikTok' },
+  { value: 'twitter', viewValue: 'Twitter' },
+  { value: 'other', viewValue: 'Other' },
+] as const;
+
 // Fields in the form
-const profileField = ['username', 'full_name', 'isIrrelevant'] as const;
+const profileField = [
+  'username',
+  'full_name',
+  'isIrrelevant',
+  'postsCnt',
+  'followerCnt',
+  'followingCnt',
+  'platform',
+] as const;
 type ProfileField = typeof profileField[number];
 
 @Component({
@@ -34,11 +50,12 @@ type ProfileField = typeof profileField[number];
 })
 export class FormComponent implements OnChanges {
   profileForm = new FormGroup({
-    username: new FormControl('', [
-      Validators.required,
-      forbiddenNameValidator(/ /i),
-    ]),
+    username: new FormControl('', [Validators.required, forbiddenNameValidator(/ /i)]),
     full_name: new FormControl(''),
+    postsCnt: new FormControl(0),
+    followerCnt: new FormControl(0),
+    followingCnt: new FormControl(0),
+    platform: new FormControl(PLATFORMS[0].value, [Validators.required]),
     isIrrelevant: new FormControl(false),
   });
   @Input() post!: Post;
@@ -46,18 +63,18 @@ export class FormComponent implements OnChanges {
   @Input() postState!: PostState;
   profile: Profile | undefined;
   nextRoute: string | undefined;
+  PLATFORMS = PLATFORMS;
 
   // Autocomplet Form
-  // options: string[] = ['One', 'Two', 'Three'];
-  filteredOptions: Observable<string[]> = of([]);
-  private _filter(value: string): string[] {
+  userNameFilteredOptions: Observable<string[]> = of([]);
+  fullNameFilteredOptions: Observable<string[]> = of([]);
+
+  private _filter(value: string, options: string[]): string[] {
     if (!!value) {
       const filterValue = value.toLowerCase();
-      return this.post.fake_names.filter((option) =>
-        option.toLowerCase().includes(filterValue)
-      );
+      return options.filter((option) => option.toLowerCase().includes(filterValue));
     }
-    return this.post.fake_names;
+    return options;
   }
 
   // Next Post
@@ -65,11 +82,7 @@ export class FormComponent implements OnChanges {
     this.presistDataService
       .getNextPost(this.post.shortcode, this.postState)
       .subscribe(
-        (p) =>
-          (this.nextRoute =
-            p === null
-              ? '/processed-posts'
-              : `/detail/${this.postState}/${p.shortcode}`)
+        (p) => (this.nextRoute = p === null ? '/processed-posts' : `/detail/${this.postState}/${p.shortcode}`)
       );
   }
 
@@ -79,7 +92,6 @@ export class FormComponent implements OnChanges {
 
   ngOnChanges() {
     if (this.postState === 'processed') {
-      console.log('triggered on change', this.post.postProfile.username);
       this.presistDataService
         .getProfile(this.post.shortcode)
         .pipe(
@@ -87,46 +99,45 @@ export class FormComponent implements OnChanges {
           tap((profile: Profile) => {
             console.log('getting profile', profile.username);
             this.profile = profile;
-            this.profileForm
-              .get('isIrrelevant')
-              ?.setValue(profile.isIrrelevant);
+            this.profileForm.get('isIrrelevant')?.setValue(profile.isIrrelevant);
             this.toggleIrrelevance();
             this.profileForm.get('username')?.setValue(profile.username);
             this.profileForm.get('full_name')?.setValue(profile.full_name);
+            this.profileForm.get('postsCnt')?.setValue(profile.postsCnt);
+            this.profileForm.get('followerCnt')?.setValue(profile.followerCnt);
+            this.profileForm.get('followingCnt')?.setValue(profile.followingCnt);
+            this.profileForm.get('platform')?.setValue(profile.platform);
           })
         )
         .subscribe();
     } else {
       // Reset field enablity when a post is unprocessed
+      this.profileForm.get('platform')?.setValue(PLATFORMS[0].value);
       this.toggleIrrelevance();
     }
 
     this.getNextRoute();
     // Autocomplete form
-    this.filteredOptions = this.profileForm.get('username')!.valueChanges.pipe(
+    this.userNameFilteredOptions = this.profileForm.get('username')!.valueChanges.pipe(
       startWith(''),
-      map((value: string) => this._filter(value))
+      map((value: string) => this._filter(value, this.post.fake_names))
+    );
+    this.fullNameFilteredOptions = this.profileForm.get('full_name')!.valueChanges.pipe(
+      startWith(''),
+      map((value: string) => this._filter(value, [this.post.postProfile.full_name]))
     );
   }
 
-  constructor(
-    private presistDataService: PresistDataService,
-    private router: Router,
-    private _snackBar: MatSnackBar
-  ) {}
+  constructor(private presistDataService: PresistDataService, private router: Router, private _snackBar: MatSnackBar) {}
 
   fieldUnchanged(controlName: ProfileField) {
     if (this.postState === 'processed' && this.profile)
-      return (
-        this.profileForm.get(controlName)?.value === this.profile[controlName]
-      );
+      return this.profileForm.get(controlName)?.value === this.profile[controlName];
     return false;
   }
 
   formUnchanged() {
-    return profileField.every((controlName) =>
-      this.fieldUnchanged(controlName)
-    );
+    return profileField.every((controlName) => this.fieldUnchanged(controlName));
   }
 
   validateFormControl(formControlName: string) {
@@ -171,6 +182,10 @@ export class FormComponent implements OnChanges {
       username: this.profileForm.get('username')!.value,
       full_name: this.profileForm.get('full_name')!.value,
       isIrrelevant: this.profileForm.get('isIrrelevant')!.value,
+      postsCnt: this.profileForm.get('postsCnt')!.value,
+      followerCnt: this.profileForm.get('followerCnt')!.value,
+      followingCnt: this.profileForm.get('followingCnt')!.value,
+      platform: this.profileForm.get('platform')!.value,
       url: this.url,
       shortcode: this.post.shortcode,
       post: this.post,

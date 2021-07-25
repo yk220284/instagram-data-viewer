@@ -13,11 +13,11 @@
     >
       <div class="extracted-text-wrapper">
         <mat-toolbar class="app-toolbar" color="primary"
-                     [ngClass]="{'mat-elevation-z5' : true }"><h4>Extracted Text</h4></mat-toolbar>
+                     [ngClass]="{'mat-elevation-z5' : true }"><h4>Scrapped Post</h4></mat-toolbar>
         <mat-card class="example-card" style="margin-bottom: auto">
           <mat-card-header>
-            <div mat-card-avatar [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}">
-            </div>
+            <div mat-card-avatar
+                 [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}"></div>
             <mat-card-title>{{ post.postProfile.username }}</mat-card-title>
             <mat-card-subtitle>
               {{ post.postProfile.full_name }}

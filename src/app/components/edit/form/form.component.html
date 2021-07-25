@@ -12,15 +12,15 @@
       placeholder="Pick username"
       aria-label="Number"
       matInput
-      [matAutocomplete]="auto"
+      [matAutocomplete]="usernameAuto"
       formControlName="username"
       [ngStyle]="{
         color: fieldUnchanged('username') ? 'gray' : 'black'
       }"
     />
-    <mat-autocomplete #auto="matAutocomplete">
+    <mat-autocomplete #usernameAuto="matAutocomplete">
       <mat-option
-        *ngFor="let option of filteredOptions | async"
+        *ngFor="let option of userNameFilteredOptions | async"
         [value]="option"
       >
         {{ option }}
@@ -36,12 +36,75 @@
       placeholder="Pick full name"
       aria-label="Number"
       matInput
-      [matAutocomplete]="auto"
+      [matAutocomplete]="fullNameAuto"
       formControlName="full_name"
       [ngStyle]="{
         color: fieldUnchanged('full_name') ? 'gray' : 'black'
       }"
     />
+  </mat-form-field>
+  <mat-autocomplete #fullNameAuto="matAutocomplete">
+    <mat-option
+      *ngFor="let option of fullNameFilteredOptions | async"
+      [value]="option"
+    >
+      {{ option }}
+    </mat-option>
+  </mat-autocomplete>
+
+  <!-- postsCnt -->
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Posts Count</mat-label>
+    <input
+      type="number"
+      placeholder="Number of posts in the fake account"
+      aria-label="Number"
+      matInput
+      formControlName="postsCnt"
+      [ngStyle]="{
+        color: fieldUnchanged('postsCnt') ? 'gray' : 'black'
+      }"
+    />
+  </mat-form-field>
+
+  <!-- followingCnt -->
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Followers Count</mat-label>
+    <input
+      type="number"
+      placeholder="Number of followers"
+      aria-label="Number"
+      matInput
+      formControlName="followerCnt"
+      [ngStyle]="{
+        color: fieldUnchanged('followerCnt') ? 'gray' : 'black'
+      }"
+    />
+  </mat-form-field>
+
+  <!-- followerCnt -->
+  <mat-form-field class="example-full-width" appearance="fill">
+    <mat-label>Following Count</mat-label>
+    <input
+      type="number"
+      placeholder="Number of followings"
+      aria-label="Number"
+      matInput
+      formControlName="followingCnt"
+      [ngStyle]="{
+        color: fieldUnchanged('followingCnt') ? 'gray' : 'black'
+      }"
+    />
+  </mat-form-field>
+
+  <!-- Platform -->
+  <mat-form-field appearance="fill">
+    <mat-label>Platform</mat-label>
+    <mat-select formControlName="platform">
+      <mat-option *ngFor="let platform of PLATFORMS" [value]="platform.value">
+        {{platform.viewValue}}
+      </mat-option>
+    </mat-select>
   </mat-form-field>
 
   <!-- Irrelevance -->
@@ -52,7 +115,6 @@
     style="margin-left: 1rem"
   >Irrelevant
   </mat-slide-toggle>
-
   <!-- error -->
   <div
     [class.cross-validation-error]="
