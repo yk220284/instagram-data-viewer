@@ -32,6 +32,8 @@ $warn: map-get($app-theme, warn);
   --color-success: #{mat-color($app-success)};
   --color-bg-primary: #e8e8e8;
   --color-bg-accent: #3d3d3d;
+  --color-bg-processed: rgba(144, 190, 194, 0.164);
+  --color-bg-unprocessed: rgba(144, 194, 152, 0.164);
 }
 
 html,

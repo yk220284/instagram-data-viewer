@@ -12,15 +12,38 @@
     line-height: 0.1em;
     margin: 10px 0 20px;
   }
-  h4 span{
+  h5 {
+    color: gray;
+    width: 100%;
+    text-align: center;
+    border-bottom: 1px solid var(--color-bg-processed);
+    line-height: 0.1em;
+    margin: 10px 0 20px;
+  }
+
+  h4 span {
     background: var(--color-bg-primary);
+    padding: 0 10px;
+  }
+  h5 span {
+    background: var(--color-bg-processed);
     padding: 0 10px;
   }
 }
 
-::ng-deep .highlight-search-text {
-  background: yellow;
+::ng-deep .highlight-username {
+  background: var(--color-primary);
   font-weight: 600;
+  font-size: large;
+}
+
+::ng-deep .highlight-exact-fullname {
+  background: var(--color-accent);
+  font-size: large;
+}
+
+::ng-deep .highlight-numbers {
+  background: yellowgreen;
 }
 
 .example-card {
@@ -40,11 +63,11 @@
 }
 
 .processed {
-  background-color: rgba(144, 190, 194, 0.164);
+  background-color: var(--color-bg-processed);
 }
 
 .unprocessed {
-  background-color: rgba(144, 194, 152, 0.164);
+  background-color:var(--color-bg-unprocessed);
 }
 
 .extracted-text-wrapper {

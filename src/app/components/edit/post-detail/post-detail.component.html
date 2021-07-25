@@ -51,13 +51,14 @@
         <mat-toolbar class="app-toolbar" color="primary"
                      [ngClass]="{'mat-elevation-z5' : true }"><h4>Extracted Text</h4></mat-toolbar>
         <p style="white-space: pre" [innerHTML]="formattedExtractedText"></p>
-        <mat-divider style="width: 80%; margin: auto"></mat-divider>
-        <p>
-          {{post.tagged_users|json}}
-        </p>
-        <p>
-          {{post.hashtags|json}}
-        </p>
+        <div *ngIf="post.hashtags.length">
+          <div class="guide-text">
+            <h5><span>Hash Tags</span></h5>
+          </div>
+          <p *ngFor="let hashtag of post.hashtags" style="color: #00376b">
+            #{{hashtag}}
+          </p>
+        </div>
       </div>
 
     </mat-grid-tile>

@@ -12,17 +12,25 @@ import { Profile } from 'src/profile';
 import { match } from 'fuzzy';
 
 interface WordStyle {
-  words: string[];
   cssCls: string;
+  words?: string[];
+  regStr?: string;
 }
 
-function formatExtractedText(wordStyles: WordStyle[], textToFormat: string) {
+function formatText(wordStyles: WordStyle[], textToFormat: string) {
   return wordStyles.reduce((textToFormat, wordStyle) => {
-    const regStr = `(?:|^)(${wordStyle.words.join('|')})(?=[\\s]|$)`;
-    return textToFormat.replace(
-      new RegExp(regStr, 'gi'),
-      (match) => `<span class=${wordStyle.cssCls}>${match}</span>`
-    );
+    const regStr =
+      wordStyle.regStr !== undefined
+        ? wordStyle.regStr
+        : wordStyle.words && wordStyle.words.length
+        ? `(?:|^)(${wordStyle.words.join('|')})(?=[\\s]|$)`
+        : '';
+    return regStr
+      ? textToFormat.replace(
+          new RegExp(regStr, 'gi'),
+          (match) => `<span class=${wordStyle.cssCls}>${match}</span>`
+        )
+      : textToFormat;
   }, textToFormat);
 }
 
@@ -37,7 +45,7 @@ export class PostDetailComponent implements OnInit {
   url: string | undefined;
   profile_pic_url: string | undefined;
   navigationSubscription: Subscription;
-  formattedExtractedText: string = `<span class="highlight-search-text"> abc </span>`;
+  formattedExtractedText: string = '';
 
   constructor(
     private route: ActivatedRoute,
@@ -64,12 +72,16 @@ export class PostDetailComponent implements OnInit {
         tap(([post, urlJson]) => {
           if (post) {
             this.post = post;
-            this.formattedExtractedText = formatExtractedText(
+            this.formattedExtractedText = formatText(
               [
-                { words: post.fake_names, cssCls: 'highlight-search-text' },
+                { words: post.fake_names, cssCls: 'highlight-username' },
                 {
                   words: [post.postProfile.full_name],
-                  cssCls: 'highlight-search-text',
+                  cssCls: 'highlight-exact-fullname',
+                },
+                {
+                  regStr: '[1-9]\\d*',
+                  cssCls: 'highlight-numbers',
                 },
               ],
               post.extracted_text
