@@ -30,22 +30,21 @@ export class UploadTaskComponent implements OnInit {
     fileReader.onload = () => {
       if (fileReader.result) {
         const posts = JSON.parse(fileReader.result.toString());
+        let totJobCnt = posts.length;
         let completePostCnt = 0;
         const tasks: Observable<any>[] = [];
         for (const postSource of posts) {
-          const post = new PostCreater(postSource).build();
-          tasks.push(
-            this.presistDataService
-              .uploadPostJson(post)
-              .pipe(
-                finalize(
-                  () =>
-                    (this.uploadPercent = of(
-                      Math.ceil((++completePostCnt / posts.length) * 100)
-                    ))
-                )
-              )
-          );
+          try {
+            const post = new PostCreater(postSource).build();
+            tasks.push(
+              this.presistDataService
+                .uploadPostJson(post)
+                .pipe(finalize(() => (this.uploadPercent = of(Math.ceil((++completePostCnt / totJobCnt) * 100)))))
+            );
+          } catch (e) {
+            console.log('cannot process: ', postSource);
+            totJobCnt--;
+          }
         }
         forkJoin(tasks)
           .pipe(
@@ -87,6 +86,4 @@ export class UploadTaskComponent implements OnInit {
       }
     }
   }
-
-  isActive(snapshot: Observable<any>) {}
 }
