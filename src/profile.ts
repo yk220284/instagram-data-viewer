@@ -9,6 +9,7 @@ export interface Profile {
   followingCnt: number;
   platform: string;
   url: string;
+  submitTime: number;
   isIrrelevant: boolean;
   post: Post;
   postState: PostState;

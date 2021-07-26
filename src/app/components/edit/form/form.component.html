@@ -157,5 +157,6 @@
     </fieldset>
   </div>
 </form>
-
-{{ this.nextRoute }}
+<div *ngIf="profile">
+  Submission time: {{this.profile.submitTime|date:'medium'}}
+</div>

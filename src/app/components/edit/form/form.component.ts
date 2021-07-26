@@ -97,7 +97,6 @@ export class FormComponent implements OnChanges {
         .pipe(
           take(1),
           tap((profile: Profile) => {
-            console.log('getting profile', profile.username);
             this.profile = profile;
             this.profileForm.get('isIrrelevant')?.setValue(profile.isIrrelevant);
             this.toggleIrrelevance();
@@ -146,6 +145,9 @@ export class FormComponent implements OnChanges {
   }
 
   handleProfile(profile: Profile) {
+    if (this.formUnchanged()) {
+      return Promise.resolve();
+    }
     if (this.postState === 'unprocessed') {
       return this.presistDataService.addProfile(profile).then(() => {
         this.presistDataService.deleteUnprocessedPost(profile.shortcode);
@@ -187,6 +189,7 @@ export class FormComponent implements OnChanges {
       followingCnt: this.profileForm.get('followingCnt')!.value,
       platform: this.profileForm.get('platform')!.value,
       url: this.url,
+      submitTime: Date.now(),
       shortcode: this.post.shortcode,
       post: this.post,
       postState: this.postState,
