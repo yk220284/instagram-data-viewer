@@ -26,6 +26,7 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatSelectModule } from '@angular/material/select';
+import { MatSortModule } from '@angular/material/sort';
 
 // Firebace Module
 import { AngularFireModule } from '@angular/fire';
@@ -80,6 +81,7 @@ import { TemplateTableComponent } from './components/display/template-table/temp
     MatSlideToggleModule,
     MatToolbarModule,
     MatSelectModule,
+    MatSortModule,
   ],
   providers: [{ provide: BUCKET, useValue: 'instagram-data-label-tool' }],
   bootstrap: [AppComponent],

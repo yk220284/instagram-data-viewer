@@ -10,7 +10,8 @@ export class ProcessedPostTableComponent implements OnInit {
   dataSource: Post[] = [];
   constructor(private presistDataService: PresistDataService) {
     this.presistDataService.profiles.subscribe(
-      (profiles) => (this.dataSource = profiles.map((p) => p.post))
+      // TODO: quick fix, ag table should be used
+      (profiles) => (this.dataSource = profiles.map((p) => Object.assign(p.post, { submitTime: p.submitTime })))
     );
   }
 
