@@ -1,4 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
+@import "~ag-grid-community/dist/styles/ag-grid.css";
+@import "~ag-grid-enterprise/dist/styles/ag-theme-material.css";
 @import '~@angular/material/theming';
 // Include the common styles for Angular Material. We include this here so that you only
 // have to load a single css file for Angular Material in your app.
@@ -114,3 +116,5 @@ input[type="text"] {
   width: 100%;
   padding: .5rem;
 }
+
+;

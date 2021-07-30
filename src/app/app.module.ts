@@ -10,6 +10,8 @@ import { PostTableComponent } from './components/display/post-table/post-table.c
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 
+// Ag grid
+import { AgGridModule } from 'ag-grid-angular';
 // Material Module
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
@@ -40,6 +42,7 @@ import { UploadTaskComponent } from './components/uploading/upload-task/upload-t
 import { FormComponent } from './components/edit/form/form.component';
 import { ProcessedPostTableComponent } from './components/display/processed-post-table/processed-post-table.component';
 import { TemplateTableComponent } from './components/display/template-table/template-table.component';
+import { LinkRendererComponent } from './components/display/link-renderer/link-renderer.component';
 
 @NgModule({
   declarations: [
@@ -52,6 +55,7 @@ import { TemplateTableComponent } from './components/display/template-table/temp
     FormComponent,
     ProcessedPostTableComponent,
     TemplateTableComponent,
+    LinkRendererComponent,
   ],
   imports: [
     BrowserModule,
@@ -60,6 +64,8 @@ import { TemplateTableComponent } from './components/display/template-table/temp
     FormsModule,
     ReactiveFormsModule,
     ScrollingModule,
+    // Ag grid
+    AgGridModule.withComponents([]),
     // Firebase Module
     AngularFireModule.initializeApp(environment.firebase),
     AngularFireAuthModule, // auth

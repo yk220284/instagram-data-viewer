@@ -46,3 +46,6 @@ Thumbs.db
 
 # Local Image and JSON Data
 /src/scraped-data
+
+# Firebase deploy cache
+/.firebase
