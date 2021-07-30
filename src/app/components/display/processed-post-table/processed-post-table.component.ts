@@ -20,6 +20,7 @@ const COLUMNS_TO_DISPLAY = [
   {
     headerName: 'Submit Time',
     field: 'submitTime',
+    sort: 'desc',
     valueFormatter: (params) => {
       return params.value ? new Date(params.value).toLocaleString('en-GB', { hour: '2-digit', minute: '2-digit' }) : '';
     },
