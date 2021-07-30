@@ -56,7 +56,7 @@ export class FormComponent implements OnChanges {
     followerCnt: new FormControl(0),
     followingCnt: new FormControl(0),
     platform: new FormControl(PLATFORMS[0].value, [Validators.required]),
-    isIrrelevant: new FormControl(false),
+    isIrrelevant: new FormControl(false, [Validators.required]),
   });
   @Input() post!: Post;
   @Input() url!: string;
@@ -98,7 +98,9 @@ export class FormComponent implements OnChanges {
           take(1),
           tap((profile: Profile) => {
             this.profile = profile;
-            this.profileForm.get('isIrrelevant')?.setValue(profile.isIrrelevant);
+            this.profileForm
+              .get('isIrrelevant')
+              ?.setValue(profile.isIrrelevant === null ? false : profile.isIrrelevant);
             this.toggleIrrelevance();
             this.profileForm.get('username')?.setValue(profile.username);
             this.profileForm.get('full_name')?.setValue(profile.full_name);
@@ -112,6 +114,7 @@ export class FormComponent implements OnChanges {
     } else {
       // Reset field enablity when a post is unprocessed
       this.profileForm.get('platform')?.setValue(PLATFORMS[0].value);
+      this.profileForm.get('isIrrelevant')?.setValue(false);
       this.toggleIrrelevance();
     }
 
