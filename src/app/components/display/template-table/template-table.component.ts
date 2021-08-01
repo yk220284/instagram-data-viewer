@@ -1,5 +1,5 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { Post, PostState } from 'src/post';
+import { Component, Input } from '@angular/core';
+import { Post } from 'src/post';
 import { LinkRendererComponent } from '../link-renderer/link-renderer.component';
 import { Observable } from 'rxjs';
 import { Profile } from '../../../../profile';
@@ -24,13 +24,11 @@ export function timeToDate(timestamp: number) {
   templateUrl: './template-table.component.html',
   styleUrls: ['./template-table.component.scss'],
 })
-export class TemplateTableComponent implements OnInit {
-  displayedColumns: string[] = ['full_name', 'shortcode', 'upload_date', 'username', 'display_url'];
-  @Input() dataSource: Post[] = [];
-  @Input() postState!: PostState;
-  clickedRows = new Set<Post>();
-
+export class TemplateTableComponent {
+  // Processed data specifics
+  @Input() rowData$!: Observable<any[]>;
   // Ag grid
+  @Input() columnDefs!: any[];
   private gridApi;
   private gridColumnApi;
   frameworkComponents = { linkRendererComponent: LinkRendererComponent };
@@ -47,9 +45,14 @@ export class TemplateTableComponent implements OnInit {
     resizable: true,
   };
   sideBar = { toolPanels: ['columns', 'filters'] };
-  // Processed data specifics
-  @Input() columnDefs!: any[];
-  @Input() rowData$!: Observable<any[]>;
+  statusBar = {
+    statusPanels: [
+      {
+        statusPanel: 'agTotalAndFilteredRowCountComponent',
+        align: 'right',
+      },
+    ],
+  };
   isGroupOpenByDefault = (params) => {
     return params.field === 'submitDay' && params.key === timeToDate(Date.now());
   };
@@ -62,12 +65,6 @@ export class TemplateTableComponent implements OnInit {
       return 0;
     }
   };
-
-  ngOnInit(): void {
-    if (this.postState === 'processed') {
-      this.displayedColumns.push('submitTime');
-    }
-  }
 
   onGridReady(params) {
     this.gridApi = params.api;
