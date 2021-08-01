@@ -1,15 +1,42 @@
-<h1>Instagram Post Viewer</h1>
-<nav mat-tab-nav-bar>
-  <a
-    mat-tab-link
-    *ngFor="let link of navLinks"
-    [routerLink]="link.path"
-    routerLinkActive
-    #rla="routerLinkActive"
-    [routerLinkActiveOptions]="{ exact: true }"
-    [active]="rla.isActive"
-  >
-    {{ link.label }}
-  </a>
-</nav>
-<router-outlet></router-outlet>
+<div style="display: flex;justify-content: space-between;">
+  <div>
+    <h1>Instagram Post Viewer</h1>
+  </div>
+  <!-- Login -->
+  <div *ngIf="auth.user | async as user; else showLogin"
+       style="margin-left: auto; display: flex;justify-content: space-between">
+    <div>
+      <h1>Hello {{ user.displayName }}!</h1>
+    </div>
+    <div>
+      <button mat-flat-button (click)="logout()">Logout</button>
+    </div>
+  </div>
+</div>
+
+<ng-container *ngIf="auth.user|async; else pleaseLogin">
+  <!-- Nav bar -->
+  <nav mat-tab-nav-bar>
+    <a
+      mat-tab-link
+      *ngFor="let link of navLinks"
+      [routerLink]="link.path"
+      routerLinkActive
+      #rla="routerLinkActive"
+      [routerLinkActiveOptions]="{ exact: true }"
+      [active]="rla.isActive"
+    >
+      {{ link.label }}
+    </a>
+  </nav>
+  <!-- Post detail -->
+  <router-outlet></router-outlet>
+</ng-container>
+
+<ng-template #showLogin>
+  <button mat-raised-button (click)="login()">Login with Google</button>
+</ng-template>
+
+<ng-template #pleaseLogin>
+  <h3>Please login use the button on the top right corner</h3>
+</ng-template>
