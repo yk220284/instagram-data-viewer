@@ -70,6 +70,15 @@ export class ProcessedPostTableComponent implements OnInit {
   isGroupOpenByDefault = (params) => {
     return params.field === 'submitDay' && params.key === timeToDate(Date.now());
   };
+  defaultGroupSortComparator = function (nodeA, nodeB) {
+    if (nodeA.key < nodeB.key) {
+      return 1;
+    } else if (nodeA.key > nodeB.key) {
+      return -1;
+    } else {
+      return 0;
+    }
+  };
 
   constructor(private presistDataService: PresistDataService) {
     // Add date group
