@@ -1,14 +1,13 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { PresistDataService } from '../../../services/presist-data.service';
-import { Profile } from 'src/profile';
 import { map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
-import { LinkRendererComponent } from '../link-renderer/link-renderer.component';
 import 'ag-grid-enterprise';
+import { extractValuesFromNestedObj, timeToDate } from '../template-table/template-table.component';
 
 const COLUMNS_TO_DISPLAY = [
-  { field: 'username', headerName: 'Poster Username' },
-  { field: 'post/postProfile/username', headerName: 'Fake Username' },
+  { field: 'post/postProfile/username', headerName: 'Poster Username' },
+  { field: 'username', headerName: 'Fake Username' },
   { field: 'platform', enableRowGroup: true, filter: true },
   { field: 'isIrrelevant', enableRowGroup: true, filter: true },
   { field: 'post/upload_date', headerName: 'Post Upload Date' },
@@ -27,59 +26,13 @@ const COLUMNS_TO_DISPLAY = [
   },
 ];
 
-function extractValuesFromNestedObj(columns_to_display: string[], dataSource: Profile[]) {
-  return dataSource.map((profile) =>
-    columns_to_display.reduce((acc, colName) => {
-      const colNameExploded = colName.split('/');
-      acc[colName] = colNameExploded.reduce((acc, obj) => acc[obj], profile);
-      return acc;
-    }, {})
-  );
-}
-
-function timeToDate(timestamp: number) {
-  const day = new Date(timestamp);
-  return `${day.getMonth() + 1}/${day.getDate()}`;
-}
-
 @Component({
   selector: 'app-processed-post-table',
   templateUrl: './processed-post-table.component.html',
 })
-export class ProcessedPostTableComponent implements OnInit {
-  // Ag grid
-  private gridApi;
-  private gridColumnApi;
-  frameworkComponents = { linkRendererComponent: LinkRendererComponent };
-  defaultColDef = {
-    flex: 1,
-    minWidth: 150,
-    sortable: true,
-    resizable: true,
-  };
-  autoGroupColumnDef = {
-    flex: 1,
-    minWidth: 150,
-    sortable: true,
-    resizable: true,
-  };
-  sideBar = { toolPanels: ['columns', 'filters'] };
-  // Processed data specifics
-  columnDefs: any[];
+export class ProcessedPostTableComponent {
   rowData$: Observable<any[]>;
-  isGroupOpenByDefault = (params) => {
-    return params.field === 'submitDay' && params.key === timeToDate(Date.now());
-  };
-  defaultGroupSortComparator = function (nodeA, nodeB) {
-    if (nodeA.key < nodeB.key) {
-      return 1;
-    } else if (nodeA.key > nodeB.key) {
-      return -1;
-    } else {
-      return 0;
-    }
-  };
-
+  columnDefs: any[];
   constructor(private presistDataService: PresistDataService) {
     // Add date group
     this.columnDefs = [
@@ -93,7 +46,6 @@ export class ProcessedPostTableComponent implements OnInit {
         filter: true,
       },
     ];
-
     this.rowData$ = this.presistDataService.profiles.pipe(
       map((dataSource) =>
         extractValuesFromNestedObj(
@@ -102,12 +54,5 @@ export class ProcessedPostTableComponent implements OnInit {
         ).map((row) => ({ ...row, submitDay: timeToDate(row['submitTime']) }))
       )
     );
-  }
-
-  ngOnInit(): void {}
-
-  onGridReady(params) {
-    this.gridApi = params.api;
-    this.gridColumnApi = params.columnApi;
   }
 }

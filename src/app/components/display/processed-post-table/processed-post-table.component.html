@@ -1,15 +1,5 @@
-<ag-grid-angular
-  #agGrid
-  style="width: 100%; height: 100%;"
-  id="myGrid"
-  class="ag-theme-material"
+<app-template-table
   [columnDefs]="columnDefs"
-  [frameworkComponents]="frameworkComponents"
-  [defaultColDef]="defaultColDef"
-  [autoGroupColumnDef]="autoGroupColumnDef"
-  [sideBar]="sideBar"
-  [rowData]="rowData$|async"
-  [isGroupOpenByDefault]="isGroupOpenByDefault"
-  [defaultGroupSortComparator]="defaultGroupSortComparator"
-  (gridReady)="onGridReady($event)">
-</ag-grid-angular>
+  [rowData$]="rowData$"
+>
+</app-template-table>
