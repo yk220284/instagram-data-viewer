@@ -1,8 +1,5 @@
 import { Injectable } from '@angular/core';
-import {
-  AngularFirestore,
-  AngularFirestoreCollection,
-} from '@angular/fire/firestore';
+import { AngularFirestore, AngularFirestoreCollection } from '@angular/fire/firestore';
 import { AngularFireStorage } from '@angular/fire/storage';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
@@ -37,20 +34,17 @@ export class PresistDataService {
   private postUnprocessedFolder: string = 'profileAndPostJson';
   private postUnprocessedCollection: AngularFirestoreCollection<Post>;
 
-  constructor(
-    private afs: AngularFirestore,
-    private imageStorage: AngularFireStorage
-  ) {
+  constructor(private afs: AngularFirestore, private imageStorage: AngularFireStorage) {
     this.imageUrlCollection = afs.collection<ImageUrl>(this.imageUrlFolder);
     // Posts
-    this.postUnprocessedCollection = afs.collection<Post>(
-      this.postUnprocessedFolder
+    this.postUnprocessedCollection = afs.collection<Post>(this.postUnprocessedFolder, (ref) =>
+      ref.orderBy('upload_date', 'desc')
     );
     this.unprocessedPosts = this.postUnprocessedCollection.valueChanges({
       idField: 'shortcode',
     });
     // Profiles
-    this.profileCollection = afs.collection<Profile>(this.profileFolder);
+    this.profileCollection = afs.collection<Profile>(this.profileFolder, (ref) => ref.orderBy('submitTime', 'desc'));
     this.profiles = this.profileCollection.valueChanges({
       idField: 'shortcode',
     });
@@ -73,10 +67,7 @@ export class PresistDataService {
 
   uploadImage(imageFile: File) {
     // The storage path
-    const fileNameNoExt: string = imageFile.name
-      .split('.')
-      .slice(0, -1)
-      .join('.');
+    const fileNameNoExt: string = imageFile.name.split('.').slice(0, -1).join('.');
     const filePath = `/${this.imageFolder}/${fileNameNoExt}.png`;
     const fileRef = this.imageStorage.ref(filePath);
 
@@ -85,9 +76,7 @@ export class PresistDataService {
       .snapshotChanges()
       .pipe(
         finalize(() => {
-          fileRef
-            .getDownloadURL()
-            .subscribe((url) => this.addImageUrl(fileNameNoExt, url));
+          fileRef.getDownloadURL().subscribe((url) => this.addImageUrl(fileNameNoExt, url));
         })
       )
       .subscribe();
@@ -95,17 +84,12 @@ export class PresistDataService {
   }
 
   uploadPostJson(post: Post) {
-    return combineLatest([
-      this.getPostUnprocessed(post.shortcode),
-      this.getPostProcessed(post.shortcode),
-    ]).pipe(
+    return combineLatest([this.getPostUnprocessed(post.shortcode), this.getPostProcessed(post.shortcode)]).pipe(
       take(1),
       tap(([uP, pP]) => console.log(`up: ${uP} pp: ${pP}`)),
       mergeMap(([uP, pP]) => {
         if (uP === null && pP === null) {
-          return from(
-            this.postUnprocessedCollection.doc(post.shortcode).set(post)
-          );
+          return from(this.postUnprocessedCollection.doc(post.shortcode).set(post));
         } else {
           console.log('already proccessed this post');
           return of('Not uploading');
@@ -115,10 +99,7 @@ export class PresistDataService {
   }
 
   /* Routing To Next Post */
-  getNextPost(
-    shortcode: string,
-    postState: PostState
-  ): Observable<Post | null> {
+  getNextPost(shortcode: string, postState: PostState): Observable<Post | null> {
     const postStore =
       postState === 'processed'
         ? this.profiles.pipe(map((profiles) => profiles.map((p) => p.post)))
@@ -155,9 +136,7 @@ export class PresistDataService {
   }
 
   updateProfile(profile: Profile) {
-    let partialProfile = Object.fromEntries(
-      Object.entries(profile).filter(([_, v]) => !!v)
-    );
+    let partialProfile = Object.fromEntries(Object.entries(profile).filter(([_, v]) => !!v));
     return this.profileCollection.doc(profile.shortcode).update(partialProfile);
   }
 
@@ -176,19 +155,14 @@ export class PresistDataService {
   }
 
   /* Query by shortcode */
-  private _getDocByShortcode(
-    collection: string,
-    shortcode: string
-  ): Observable<any> {
+  private _getDocByShortcode(collection: string, shortcode: string): Observable<any> {
     return this.afs
       .collection(collection, (ref) => ref.where('shortcode', '==', shortcode))
       .valueChanges()
       .pipe(
         map((values) => {
           if (values.length !== 1) {
-            console.log(
-              `Query by shortcode ${shortcode} in ${collection} got ${values.length} posts`
-            );
+            console.log(`Query by shortcode ${shortcode} in ${collection} got ${values.length} posts`);
             return null;
           } else {
             return values[0];
