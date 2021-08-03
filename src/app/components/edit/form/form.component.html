@@ -1,162 +1,176 @@
-<form
-  class="form-group"
-  [formGroup]="profileForm"
-  #formDir="ngForm"
-  (ngSubmit)="onSubmit(profileForm, formDir)"
->
-  <!-- username -->
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label for="username">Username</mat-label>
-    <input
-      type="text"
-      placeholder="Pick username"
-      aria-label="Number"
-      matInput
-      [matAutocomplete]="usernameAuto"
-      formControlName="username"
-      [ngStyle]="{
+<div style="display: flex; justify-content: center; flex-direction: column; height: 100%">
+  <div *ngIf="profileForm.get('username')!.value as username"
+       style="height: 50px;display:flex;justify-content:space-between;align-items: baseline">
+    <h2>
+      Link To Fake Account
+    </h2>
+    <a [href]="'https://instagram.com/'+username" target="_blank">{{username}}</a>
+  </div>
+  <div style="flex:1">
+    <form
+      class="form-group"
+      [formGroup]="profileForm"
+      #formDir="ngForm"
+      (ngSubmit)="onSubmit(profileForm, formDir)"
+    >
+      <!-- username -->
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Username</mat-label>
+        <input
+          type="text"
+          placeholder="Pick username"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="usernameAuto"
+          formControlName="username"
+          [ngStyle]="{
         color: fieldUnchanged('username') ? 'gray' : 'black'
       }"
-    />
-    <mat-autocomplete #usernameAuto="matAutocomplete">
-      <mat-option
-        *ngFor="let option of userNameFilteredOptions | async"
-        [value]="option"
-      >
-        {{ option }}
-      </mat-option>
-    </mat-autocomplete>
-  </mat-form-field>
+        />
+        <mat-autocomplete #usernameAuto="matAutocomplete">
+          <mat-option
+            *ngFor="let option of userNameFilteredOptions | async"
+            [value]="option"
+          >
+            {{ option }}
+          </mat-option>
+        </mat-autocomplete>
+      </mat-form-field>
 
-  <!-- full name -->
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Full Name</mat-label>
-    <input
-      type="text"
-      placeholder="Pick full name"
-      aria-label="Number"
-      matInput
-      [matAutocomplete]="fullNameAuto"
-      formControlName="full_name"
-      [ngStyle]="{
+      <!-- full name -->
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Full Name</mat-label>
+        <input
+          type="text"
+          placeholder="Pick full name"
+          aria-label="Number"
+          matInput
+          [matAutocomplete]="fullNameAuto"
+          formControlName="full_name"
+          [ngStyle]="{
         color: fieldUnchanged('full_name') ? 'gray' : 'black'
       }"
-    />
-  </mat-form-field>
-  <mat-autocomplete #fullNameAuto="matAutocomplete">
-    <mat-option
-      *ngFor="let option of fullNameFilteredOptions | async"
-      [value]="option"
-    >
-      {{ option }}
-    </mat-option>
-  </mat-autocomplete>
+        />
+      </mat-form-field>
+      <mat-autocomplete #fullNameAuto="matAutocomplete">
+        <mat-option
+          *ngFor="let option of fullNameFilteredOptions | async"
+          [value]="option"
+        >
+          {{ option }}
+        </mat-option>
+      </mat-autocomplete>
 
-  <!-- postsCnt -->
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Posts Count</mat-label>
-    <input
-      type="number"
-      placeholder="Number of posts in the fake account"
-      aria-label="Number"
-      matInput
-      formControlName="postsCnt"
-      [ngStyle]="{
+      <!-- postsCnt -->
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Posts Count</mat-label>
+        <input
+          type="number"
+          placeholder="Number of posts in the fake account"
+          aria-label="Number"
+          matInput
+          formControlName="postsCnt"
+          [ngStyle]="{
         color: fieldUnchanged('postsCnt') ? 'gray' : 'black'
       }"
-    />
-  </mat-form-field>
+        />
+      </mat-form-field>
 
-  <!-- followingCnt -->
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Followers Count</mat-label>
-    <input
-      type="number"
-      placeholder="Number of followers"
-      aria-label="Number"
-      matInput
-      formControlName="followerCnt"
-      [ngStyle]="{
+      <!-- followingCnt -->
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Followers Count</mat-label>
+        <input
+          type="number"
+          placeholder="Number of followers"
+          aria-label="Number"
+          matInput
+          formControlName="followerCnt"
+          [ngStyle]="{
         color: fieldUnchanged('followerCnt') ? 'gray' : 'black'
       }"
-    />
-  </mat-form-field>
+        />
+      </mat-form-field>
 
-  <!-- followerCnt -->
-  <mat-form-field class="example-full-width" appearance="fill">
-    <mat-label>Following Count</mat-label>
-    <input
-      type="number"
-      placeholder="Number of followings"
-      aria-label="Number"
-      matInput
-      formControlName="followingCnt"
-      [ngStyle]="{
+      <!-- followerCnt -->
+      <mat-form-field class="example-full-width" appearance="fill">
+        <mat-label>Following Count</mat-label>
+        <input
+          type="number"
+          placeholder="Number of followings"
+          aria-label="Number"
+          matInput
+          formControlName="followingCnt"
+          [ngStyle]="{
         color: fieldUnchanged('followingCnt') ? 'gray' : 'black'
       }"
-    />
-  </mat-form-field>
+        />
+      </mat-form-field>
 
-  <!-- Platform -->
-  <mat-form-field appearance="fill">
-    <mat-label>Platform</mat-label>
-    <mat-select formControlName="platform">
-      <mat-option *ngFor="let platform of PLATFORMS" [value]="platform.value">
-        {{platform.viewValue}}
-      </mat-option>
-    </mat-select>
-  </mat-form-field>
+      <!-- Platform -->
+      <mat-form-field appearance="fill">
+        <mat-label>Platform</mat-label>
+        <mat-select formControlName="platform">
+          <mat-option *ngFor="let platform of PLATFORMS" [value]="platform.value">
+            {{platform.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
 
-  <!-- Irrelevance -->
-  <mat-slide-toggle
-    formControlName="isIrrelevant"
-    color="warn"
-    (change)="toggleIrrelevance()"
-    style="margin-left: 1rem"
-  >Irrelevant
-  </mat-slide-toggle>
-  <!-- error -->
-  <div
-    [class.cross-validation-error]="
+      <!-- Irrelevance -->
+      <mat-slide-toggle
+        formControlName="isIrrelevant"
+        color="warn"
+        (change)="toggleIrrelevance()"
+        style="margin-left: 1rem"
+      >Irrelevant
+      </mat-slide-toggle>
+      <!-- error -->
+      <div
+        [class.cross-validation-error]="
       profileForm.errors?.identityRevealed &&
       (profileForm.touched || profileForm.dirty)
     "
-  >
-    <div *ngIf="validateFormControl('username')" class="alert alert-danger">
-      <div *ngIf="profileForm.get('username')!.errors?.required">
-        Username is required.
-      </div>
-      <div
-        *ngIf="profileForm.get('username')!.errors?.forbiddenName"
-        class="alert alert-danger"
       >
-        Space is not allowed.
+        <div *ngIf="validateFormControl('username')" class="alert alert-danger">
+          <div *ngIf="profileForm.get('username')!.errors?.required">
+            Username is required.
+          </div>
+          <div
+            *ngIf="profileForm.get('username')!.errors?.forbiddenName"
+            class="alert alert-danger"
+          >
+            Space is not allowed.
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  <div class="example-button-row">
-    <fieldset ng-disabled="url===undefined">
-      <button
-        mat-raised-button
-        color="primary"
-        type="submit"
-        [disabled]="!profileForm.valid || nextRoute === undefined"
-      >
-        Submit
-      </button>
+      <div class="example-button-row">
+        <fieldset ng-disabled="url===undefined">
+          <button
+            mat-raised-button
+            color="primary"
+            type="submit"
+            [disabled]="!profileForm.valid || nextRoute === undefined"
+          >
+            Submit
+          </button>
 
-      <button
-        type="button"
-        mat-raised-button
-        routerLink="{{ nextRoute }}"
-        [disabled]="!hasNextRoute()"
-        (click)="formDir.resetForm()"
-      >
-        {{ hasNextRoute() ? "See Next Post" : "No More Post" }}
-      </button>
-    </fieldset>
+          <button
+            type="button"
+            mat-raised-button
+            routerLink="{{ nextRoute }}"
+            [disabled]="!hasNextRoute()"
+            (click)="formDir.resetForm()"
+          >
+            {{ hasNextRoute() ? "See Next Post" : "No More Post" }}
+          </button>
+        </fieldset>
+      </div>
+    </form>
   </div>
-</form>
-<div *ngIf="profile">
-  Submission time: {{this.profile.submitTime|date:'medium'}}
+
+  <div *ngIf="profile" style="height: 64px">
+    Submission time: {{this.profile.submitTime|date:'medium'}}
+  </div>
+
+
 </div>
