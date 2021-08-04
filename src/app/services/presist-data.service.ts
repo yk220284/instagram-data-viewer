@@ -4,7 +4,7 @@ import { AngularFireStorage } from '@angular/fire/storage';
 import { combineLatest, from, Observable, of } from 'rxjs';
 import { finalize, map, mergeMap, take, tap } from 'rxjs/operators';
 import { Post, PostState } from 'src/post';
-import { Profile } from 'src/profile';
+import { Profile, profileComparator } from 'src/profile';
 
 export type ImgType = 'post' | 'profile';
 
@@ -45,9 +45,11 @@ export class PresistDataService {
     });
     // Profiles
     this.profileCollection = afs.collection<Profile>(this.profileFolder, (ref) => ref.orderBy('submitTime', 'desc'));
-    this.profiles = this.profileCollection.valueChanges({
-      idField: 'shortcode',
-    });
+    this.profiles = this.profileCollection
+      .valueChanges({
+        idField: 'shortcode',
+      })
+      .pipe(map((profiles) => profiles.sort(profileComparator)));
   }
 
   /* Uploader */
@@ -99,7 +101,7 @@ export class PresistDataService {
   }
 
   /* Routing To Next Post */
-  getNextPost(shortcode: string, postState: PostState): Observable<Post | null> {
+  getNextPost(shortcode: string, postState: PostState, idx: number): Observable<Post | null> {
     const postStore =
       postState === 'processed'
         ? this.profiles.pipe(map((profiles) => profiles.map((p) => p.post)))
@@ -115,7 +117,7 @@ export class PresistDataService {
           console.log('cannot find this post, err, give the first post');
           return posts[0];
         }
-        return posts[(cur_idx + 1) % posts.length];
+        return posts[(cur_idx + posts.length + idx) % posts.length];
       })
     );
   }

@@ -63,6 +63,7 @@ export class FormComponent implements OnChanges {
   @Input() postState!: PostState;
   profile: Profile | undefined;
   nextRoute: string | undefined;
+  previousRoute: string | undefined;
   PLATFORMS = PLATFORMS;
 
   // Autocomplet Form
@@ -80,9 +81,14 @@ export class FormComponent implements OnChanges {
   // Next Post
   getNextRoute() {
     this.presistDataService
-      .getNextPost(this.post.shortcode, this.postState)
+      .getNextPost(this.post.shortcode, this.postState, 1)
       .subscribe(
         (p) => (this.nextRoute = p === null ? '/processed-posts' : `/detail/${this.postState}/${p.shortcode}`)
+      );
+    this.presistDataService
+      .getNextPost(this.post.shortcode, this.postState, -1)
+      .subscribe(
+        (p) => (this.previousRoute = p === null ? '/processed-posts' : `/detail/${this.postState}/${p.shortcode}`)
       );
   }
 
@@ -201,7 +207,7 @@ export class FormComponent implements OnChanges {
       .then(() => {
         formDir.resetForm();
         this.profileForm.reset();
-        this.router.navigate([this.nextRoute]);
+        this.router.navigate([this.postState === 'processed' ? this.previousRoute : this.nextRoute]);
       })
       .catch((e) => {
         console.log('err: ', e);

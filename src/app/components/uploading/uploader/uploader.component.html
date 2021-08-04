@@ -11,7 +11,7 @@
 
 <input
   #folderInput
-  hidden="true"
+  [hidden]="true"
   type="file"
   onclick="this.value=null"
   (change)="filesPicied(folderInput.files)"
@@ -24,7 +24,7 @@
 <div *ngIf="files.length">
   <div>Uploaded {{ uploadedCnt }} / {{ files.length }} files</div>
   <cdk-virtual-scroll-viewport itemSize="50" class="upload-files-viewport">
-    <div *ngFor="let file of files.reverse()">
+    <div *ngFor="let file of files">
       <app-upload-task [file]="file" (uploaded)="countUploaded()">
       </app-upload-task>
     </div>

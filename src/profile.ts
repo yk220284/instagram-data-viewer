@@ -14,3 +14,12 @@ export interface Profile {
   post: Post;
   postState: PostState;
 }
+export function profileComparator(p1: Profile, p2: Profile) {
+  if (p1.isIrrelevant > p2.isIrrelevant) {
+    return 1;
+  } else if (p1.isIrrelevant < p2.isIrrelevant) {
+    return -1;
+  } else {
+    return p1.submitTime > p2.submitTime ? -1 : 1;
+  }
+}

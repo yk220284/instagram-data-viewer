@@ -145,14 +145,28 @@
       </div>
       <div class="example-button-row">
         <fieldset ng-disabled="url===undefined">
-          <button
-            mat-raised-button
-            color="primary"
-            type="submit"
-            [disabled]="!profileForm.valid || nextRoute === undefined"
+          <ng-container
+            *ngIf=" formUnchanged() && postState === 'processed'; else submitButton"
           >
-            Submit
-          </button>
+            <button
+              mat-raised-button
+              color="accent"
+              type="submit"
+              [disabled]="!profileForm.valid || nextRoute === undefined"
+            >
+              Previous Post
+            </button>
+          </ng-container>
+          <ng-template #submitButton>
+            <button
+              mat-raised-button
+              color="primary"
+              type="submit"
+              [disabled]="!profileForm.valid || nextRoute === undefined"
+            >
+              Submit
+            </button>
+          </ng-template>
 
           <button
             type="button"
