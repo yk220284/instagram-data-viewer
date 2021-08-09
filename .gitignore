@@ -48,4 +48,4 @@ Thumbs.db
 /src/scraped-data
 
 # Firebase deploy cache
-/.firebase
+.firebase
