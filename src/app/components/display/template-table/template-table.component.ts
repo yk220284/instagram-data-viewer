@@ -14,6 +14,18 @@ export function extractValuesFromNestedObj(columns_to_display: string[], dataSou
   );
 }
 
+function dateParse(dateStr: string) {
+  try {
+    const [mon, day] = dateStr.split('/').map(Number);
+    if (!!mon && !!day) {
+      return new Date(2021, mon - 1, day);
+    }
+  } catch (e) {
+    return NaN;
+  }
+  return NaN;
+}
+
 export function timeToDate(timestamp: number) {
   const day = new Date(timestamp);
   return `${day.getMonth() + 1}/${day.getDate()}`;
@@ -57,13 +69,10 @@ export class TemplateTableComponent {
     return params.field === 'submitDay' && params.key === timeToDate(Date.now());
   };
   defaultGroupSortComparator = function (nodeA, nodeB) {
-    if (nodeA.key < nodeB.key) {
-      return 1;
-    } else if (nodeA.key > nodeB.key) {
-      return -1;
-    } else {
-      return 0;
-    }
+    const dateA = dateParse(nodeA.key);
+    const dateB = dateParse(nodeB.key);
+    const [a, b] = !!dateA && !!dateB ? [dateA, dateB] : [nodeA.key, nodeB.key];
+    return a < b ? 1 : a > b ? -1 : 0;
   };
 
   onGridReady(params) {
