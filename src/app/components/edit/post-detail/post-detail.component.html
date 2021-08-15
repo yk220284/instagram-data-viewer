@@ -15,14 +15,41 @@
         <mat-toolbar class="app-toolbar" color="primary"
                      [ngClass]="{'mat-elevation-z5' : true }"><h4>Scrapped Post</h4></mat-toolbar>
         <mat-card class="example-card" style="margin-bottom: auto">
-          <mat-card-header>
-            <div mat-card-avatar
+          <mat-card-header style="display: flex; align-items: stretch">
+            <div mat-card-avatar style="height: 100px; width: 100px"
                  [style]="{'background-image':'url('+profile_pic_url+')','background-size':'cover'}"></div>
-            <mat-card-title>{{ post.postProfile.username }}</mat-card-title>
-            <mat-card-subtitle>
-              {{ post.postProfile.full_name }}
-            </mat-card-subtitle>
+            <div>
+              <mat-card-title style="display: flex; align-items: center">
+                <a style="text-decoration: none" [href]="'https://instagram.com/'+post.postProfile.username"
+                   target="_blank">{{post.postProfile.username}}</a>
+                <ng-container *ngIf="post.postProfile.is_verified">
+                  <mat-icon>verified_user</mat-icon>
+                </ng-container>
+                <ng-container *ngIf="post.postProfile.is_business_account">
+                  <mat-icon>business_center</mat-icon>
+                </ng-container>
+              </mat-card-title>
+              <mat-card-subtitle style="display: flex; flex-direction: column; width: 100%">
+                <div>
+                  {{ post.postProfile.full_name }}
+                </div>
+                <div style="display: flex; justify-content: space-between; width: 80%; margin-top: 10px">
+                  <div>
+                    Posts {{post.postProfile.postsCnt | number}}
+                  </div>
+                  <div>
+                    Follower {{post.postProfile.followersCnt | number}}
+                  </div>
+                  <div>
+                    Following {{post.postProfile.followingCnt | number}}
+                  </div>
+                </div>
+              </mat-card-subtitle>
+            </div>
           </mat-card-header>
+          <mat-card-content>
+
+          </mat-card-content>
           <img mat-card-image class="postImg" [src]="url" alt="no image"/>
           <mat-card-content>
             <div class="guide-text">
@@ -51,6 +78,22 @@
         <mat-toolbar class="app-toolbar" color="primary"
                      [ngClass]="{'mat-elevation-z5' : true }"><h4>Extracted Text</h4></mat-toolbar>
         <p style="white-space: pre" [innerHTML]="formattedExtractedText"></p>
+        <div *ngIf="post.postProfile.business_category_name as b_cat">
+          <div class="guide-text">
+            <h5><span>Business Category</span></h5>
+          </div>
+          <p style="color: #00376b">
+            {{b_cat}}
+          </p>
+        </div>
+        <div *ngIf="post.postProfile.overall_category_name as o_cat">
+          <div class="guide-text">
+            <h5><span>Overall Category</span></h5>
+          </div>
+          <p style="color: #00376b">
+            {{o_cat}}
+          </p>
+        </div>
         <div *ngIf="post.hashtags.length">
           <div class="guide-text">
             <h5><span>Hash Tags</span></h5>
