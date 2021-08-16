@@ -13,6 +13,7 @@ export interface Profile {
   isIrrelevant: boolean;
   post: Post;
   postState: PostState;
+  scamType: string;
 }
 export function profileComparator(p1: Profile, p2: Profile) {
   if (p1.isIrrelevant > p2.isIrrelevant) {

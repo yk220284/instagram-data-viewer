@@ -31,6 +31,14 @@ const PLATFORMS = [
   { value: 'other', viewValue: 'Other' },
 ] as const;
 
+const SCAM_TYPES = [
+  { value: 'imperonator', viewValue: 'Impersonator (default)' },
+  { value: 'catfish', viewValue: 'romance scam, 漂亮女优' },
+  { value: 'lotteryMoney', viewValue: 'lottery/money scam, 骗钱的，赢彩票' },
+  { value: 'fakeOrder', viewValue: 'fake order scam, 买东西，交钱不给货' },
+  { value: 'reportforother', viewValue: 'Report for others, 帮别人举报,分不出来' },
+] as const;
+
 // Fields in the form
 const profileField = [
   'username',
@@ -40,6 +48,7 @@ const profileField = [
   'followerCnt',
   'followingCnt',
   'platform',
+  'scamType',
 ] as const;
 type ProfileField = typeof profileField[number];
 
@@ -56,6 +65,7 @@ export class FormComponent implements OnChanges {
     followerCnt: new FormControl(0),
     followingCnt: new FormControl(0),
     platform: new FormControl(PLATFORMS[0].value, [Validators.required]),
+    scamType: new FormControl(SCAM_TYPES[0].value, [Validators.required]),
     isIrrelevant: new FormControl(false, [Validators.required]),
   });
   @Input() post!: Post;
@@ -65,6 +75,7 @@ export class FormComponent implements OnChanges {
   nextRoute: string | undefined;
   previousRoute: string | undefined;
   PLATFORMS = PLATFORMS;
+  SCAM_TYPES = SCAM_TYPES;
 
   // Autocomplet Form
   userNameFilteredOptions: Observable<string[]> = of([]);
@@ -114,12 +125,14 @@ export class FormComponent implements OnChanges {
             this.profileForm.get('followerCnt')?.setValue(profile.followerCnt);
             this.profileForm.get('followingCnt')?.setValue(profile.followingCnt);
             this.profileForm.get('platform')?.setValue(profile.platform);
+            this.profileForm.get('scamType')?.setValue(profile.scamType || SCAM_TYPES[0].value);
           })
         )
         .subscribe();
     } else {
       // Reset field enablity when a post is unprocessed
       this.profileForm.get('platform')?.setValue(PLATFORMS[0].value);
+      this.profileForm.get('scamType')?.setValue(SCAM_TYPES[0].value);
       this.profileForm.get('isIrrelevant')?.setValue(false);
       this.toggleIrrelevance();
     }
@@ -198,6 +211,7 @@ export class FormComponent implements OnChanges {
       followerCnt: this.profileForm.get('followerCnt')!.value,
       followingCnt: this.profileForm.get('followingCnt')!.value,
       platform: this.profileForm.get('platform')!.value,
+      scamType: this.profileForm.get('scamType')!.value,
       url: this.url,
       submitTime: submitTime,
       shortcode: this.post.shortcode,

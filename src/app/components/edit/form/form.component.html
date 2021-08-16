@@ -124,6 +124,16 @@
         style="margin-left: 1rem"
       >Irrelevant
       </mat-slide-toggle>
+
+      <!-- Platform -->
+      <mat-form-field appearance="fill">
+        <mat-label>Scam Type</mat-label>
+        <mat-select formControlName="scamType">
+          <mat-option *ngFor="let scamType of SCAM_TYPES" [value]="scamType.value">
+            {{scamType.viewValue}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
       <!-- error -->
       <div
         [class.cross-validation-error]="
