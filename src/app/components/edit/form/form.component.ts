@@ -34,7 +34,7 @@ const PLATFORMS = [
 const SCAM_TYPES = [
   { value: 'imperonator', viewValue: 'Impersonator (default)' },
   { value: 'lotteryMoney', viewValue: 'Impersonator money scam, 骗钱的，赢彩票' },
-  { value: 'reportForOther', viewValue: 'Impersonator report for others, 帮别人举报' },
+  { value: 'reportForOther', viewValue: 'Report for others, 帮别人举报' },
   { value: 'moneyScam', viewValue: 'Money Scam, 中奖/交钱不给货' },
   { value: 'catfish', viewValue: 'Romance Scam, 漂亮女优' },
   { value: 'botLike', viewValue: 'Bot like, 像机器人账号' },
