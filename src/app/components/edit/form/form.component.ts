@@ -189,6 +189,7 @@ export class FormComponent implements OnChanges {
 
   onSubmit(formData: any, formDir: FormGroupDirective) {
     this.openSnackBar();
+    const submitTime = this.profile?.submitTime || Date.now();
     const profile: Profile = {
       username: this.profileForm.get('username')!.value,
       full_name: this.profileForm.get('full_name')!.value,
@@ -198,16 +199,17 @@ export class FormComponent implements OnChanges {
       followingCnt: this.profileForm.get('followingCnt')!.value,
       platform: this.profileForm.get('platform')!.value,
       url: this.url,
-      submitTime: Date.now(),
+      submitTime: submitTime,
       shortcode: this.post.shortcode,
       post: this.post,
       postState: this.postState,
     };
+    const nextRoute = this.postState === 'unprocessed' || !this.formUnchanged() ? this.nextRoute : this.previousRoute;
     this.handleProfile(profile)
       .then(() => {
         formDir.resetForm();
         this.profileForm.reset();
-        this.router.navigate([this.postState === 'processed' ? this.previousRoute : this.nextRoute]);
+        this.router.navigate([nextRoute]);
       })
       .catch((e) => {
         console.log('err: ', e);

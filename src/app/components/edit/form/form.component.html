@@ -152,7 +152,7 @@
               mat-raised-button
               color="accent"
               type="submit"
-              [disabled]="!profileForm.valid || nextRoute === undefined"
+              [disabled]="!profileForm.valid || previousRoute === undefined"
             >
               Previous Post
             </button>
@@ -185,6 +185,5 @@
   <div *ngIf="profile" style="height: 64px">
     Submission time: {{this.profile.submitTime|date:'medium'}}
   </div>
-
 
 </div>
