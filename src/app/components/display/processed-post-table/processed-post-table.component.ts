@@ -10,6 +10,7 @@ const COLUMNS_TO_DISPLAY = [
   { field: 'username', headerName: 'Fake Username' },
   { field: 'platform', enableRowGroup: true, filter: true },
   { field: 'isIrrelevant', enableRowGroup: true, filter: true },
+  { field: 'scamType', enableRowGroup: true, filter: true },
   { field: 'post/upload_date', headerName: 'Post Upload Date' },
   {
     field: 'shortcode',
