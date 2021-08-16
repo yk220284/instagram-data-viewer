@@ -33,10 +33,12 @@ const PLATFORMS = [
 
 const SCAM_TYPES = [
   { value: 'imperonator', viewValue: 'Impersonator (default)' },
-  { value: 'catfish', viewValue: 'romance scam, 漂亮女优' },
-  { value: 'lotteryMoney', viewValue: 'lottery/money scam, 骗钱的，赢彩票' },
-  { value: 'fakeOrder', viewValue: 'fake order scam, 买东西，交钱不给货' },
-  { value: 'reportforother', viewValue: 'Report for others, 帮别人举报,分不出来' },
+  { value: 'lotteryMoney', viewValue: 'Impersonator money scam, 骗钱的，赢彩票' },
+  { value: 'reportForOther', viewValue: 'Impersonator report for others, 帮别人举报' },
+  { value: 'moneyScam', viewValue: 'Money Scam, 中奖/交钱不给货' },
+  { value: 'catfish', viewValue: 'Romance Scam, 漂亮女优' },
+  { value: 'botLike', viewValue: 'Bot like, 像机器人账号' },
+  { value: 'ad', viewValue: 'Ad scam, 虚假广告' },
 ] as const;
 
 // Fields in the form
@@ -65,7 +67,7 @@ export class FormComponent implements OnChanges {
     followerCnt: new FormControl(0),
     followingCnt: new FormControl(0),
     platform: new FormControl(PLATFORMS[0].value, [Validators.required]),
-    scamType: new FormControl(SCAM_TYPES[0].value, [Validators.required]),
+    scamType: new FormControl([SCAM_TYPES[0].value], [Validators.required]),
     isIrrelevant: new FormControl(false, [Validators.required]),
   });
   @Input() post!: Post;
