@@ -1,6 +1,8 @@
 # InstagramDataViewer
 Deployed live [here](https://instagram-data-label-tool.web.app/). Logging in with any Google Account. 
 
+For Impersonation Accounts collection, a Python scraper can be found [here](https://github.com/yk220284/Instagram_impersonation_data_scraper).
+
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
